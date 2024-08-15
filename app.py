@@ -59,7 +59,7 @@ def handle_form():
 def emo():
     final_choice = session.get('final_choice', None)
     content = {
-    'B': {'image_path': 'static/img/ring.jpg'},
+    'B': {'image_path': 'static/img/ringg.jpg'},
     'A_C': {'image_path': 'static/img/alarm.jpg'}
     }
     chosen_content = content['B'] if final_choice == 'B' else content['A_C']
