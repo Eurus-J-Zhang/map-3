@@ -3,25 +3,31 @@
 {% block script %}
 <script>
     function fn1(){
-        window.location="page2";
+        window.location="s1";
     }
 </script>
  {% endblock %}
 
 
-{% block main_text %}
+{% block top_block %}
 
 <p class="t_title">
 
+Your task is to navigate the metro lines from "S1" to "S5".
+<!-- You will be provided with a map to guide you.  -->
+Keep in mind that you have a limited amount of time to reach your destination, so avoid unnecessary detours. 
+The remaining time will be displayed, along with the time costs associated with your possible actions. 
 
-    You are a passenger using public transport for your daily work commute. 
+
+
+    <!-- You are a passenger using public transport for your daily work commute. 
     You live on Niall Street and usually take the metro Blue Line to Admiralty for work. 
     Recently, you heard that one of the stations would undergo
     construction, preventing any metro trains from passing through. Although you were aware 
     of the construction, you didn't remember the exact start date or which station would be 
-    affected. 
+    affected.  -->
     
-    <br><br>
+    <!-- <br><br>
     Today, on your way to work, the metro stops unexpectly at City Square.
     An announcement informs all passengers that they 
     must disembark because the next station is under construction, and 
@@ -32,26 +38,28 @@
     You have a digital map app on your phone to assist you. As you exit the metro station, you 
     notice the next metro on the Red Line towards Crown Height will depart in 2 minutes. 
     You need to decide whether you should take this metro or not, as any wrong 
-    decision could make you late for an important meeting.
+    decision could make you late for an important meeting. -->
     <br><br>
-    Please scroll down and press "Continue" to access the map and the metro and tram timetable. Remember,
-     you only have 2 minutes to decide on your route. 
+    
 
 
-<br>
 
-
-<br>
     <br>
     <div class="container">
-        <img src="{{ url_for('static', filename='img/metro.png') }}" alt="Example Image" style="width: 500px; height: 500px;">
+        <img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Example Image" style="width: 500px;">
     </div>
     <br><br>
 <!-- The figure here should include the tram as well. -->
 </p>
 
+
+Please click the button "Continue" to access the game. 
+<br><br>
+
+<button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
+
 {% endblock %}
 
 {% block continue %}
-<button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
+
 {% endblock %}

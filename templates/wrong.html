@@ -15,19 +15,16 @@
  {% endblock %}
 
 
-{% block main_text %}
+{% block  top_block%}
 
 <p class="t_title">
-    Regrettably, the alarm has been set off. 
-    The entire house has been secured, and it's only a matter of time before your presence is detected. 
-    This situation is likely to escalate into significant trouble, jeopardizing the esteemed reputation of your family.
-    <br><br>
-<img src="{{ url_for('static', filename='img/alarm.jpg') }}" alt="Example Image"  style="width: 100%;">
+    You have failed the task    <br><br>
+<!-- <img src="{{ url_for('static', filename='img/alarm.jpg') }}" alt="Example Image"  style="width: 100%;"> -->
 <br></p>
 
 {% endblock %}
 
 
-{% block continue %}
+{% block right_block %}
 <button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
 {% endblock %}

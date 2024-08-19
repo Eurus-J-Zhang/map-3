@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block script %}
+
+<script>
+    var currentStation = "{{ station }}";
+
+    // Function to show the modal with a message
+    function showModal(message) {
+        var myModal = document.getElementById('myModal');
+        var modalText = document.getElementById('modalText');
+        if (myModal && modalText) {
+            modalText.innerHTML = message; // Update the modal text
+            myModal.style.display = "block";
+        }
+    }
+
+    // Function to close the modal and start the timer
+    function closeModal() {
+        var myModal = document.getElementById('myModal');
+        if (myModal) {
+            myModal.style.display = "none";
+            startCountdown(); // Start the timer after closing the modal
+        }
+    }
+
+    // Initialize the countdown timer to 120 seconds
+    let countdown = 120;
+
+    // Function to start the countdown timer
+    function startCountdown() {
+        const timerElement = document.getElementById('timer');
+
+        const countdownInterval = setInterval(function() {
+            // Update the timer display
+            timerElement.textContent = countdown;
+
+            // Decrease the countdown by one second
+            countdown--;
+
+            // If the countdown reaches zero, redirect to the fail page
+            if (countdown < 0) {
+                clearInterval(countdownInterval);
+                window.location.href = "/wrong"; // Redirect to the fail page
+            }
+        }, 1000); // Update every second
+    }
+
+    // Set up close functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        var closeButton = document.getElementsByClassName("close")[0];
+        var myModal = document.getElementById('myModal');
+
+        if(closeButton && myModal) {
+            // Close modal when the close button is clicked
+            closeButton.onclick = function() {
+                closeModal();
+            };
+
+            // Close modal when clicking outside of the modal content
+            window.onclick = function(event) {
+                if (event.target == myModal) {
+                    closeModal();
+                }
+            };
+        }
+
+        // Show the modal if the station is 's3'
+        if (currentStation === 's3') {
+            showModal(`However, the metro stops at s3 unexpectly, and could not continue to the 
+            direction of s14. <br>
+            It is due to ongoing construction at s4, with no metros able to pass through.  <br>
+            Please design your trip accordingly.
+            <br><br>
+            Note: you have maximum of 2 minutes to decide your next action. 
+            <br>If you don't act within this time, you'll miss the next metro, ensuring you will be late and fail the task. 
+            <br>A timer will start upon closing this message. 
+            `);
+        }
+
+        let currentScore = parseInt("{{ score }}", 10); 
+
+        // Check the score and show the modal if score <= 0
+        if (currentScore <= 0) {
+            // showFailModal('messages');
+            showModal('Sorry, you have run out of time. You will be directed to the result page in 3 seconds.');
+            setTimeout(function() {
+                window.location.href = "/wrong"; // Redirect to the wrong.html page
+            }, 3000); // 3000 milliseconds = 3 seconds
+        }
+        if (currentStation === 's5' && currentScore > 0) {
+            showModal('You have reached your destination! Now you can get out of the metro and finish the task.')}
+
+    });
+</script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}
+
+
+
+{% block headline %}
+<!-- Modal for station s3 -->
+{% if station == 's3' %}
+<!-- <div id="myModal" class="modal"> -->
+    <!-- <div class="modal-content">
+        <span class="close">&times;</span> -->
+        <!-- <p id="modalText">Some text in the Modal..</p> -->
+    <!-- </div> -->
+<!-- </div> -->
+<br>
+Time left to make a decision: <span id="timer">120</span> seconds
+<br>
+{% endif %}
+
+
+<p class="t_title">
+    Current station: {{ station | upper }}
+    <br>
+    Time left: {{ score }} mins
+
+</p>
+{% endblock %}
+
+{% block top_block %}
+Please select an action and click “continue”. Note: the action you choose would lead you to the next metro station. 
+{% endblock %}
+<br><br>
+
+{% block left_block %}
+<img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Example Image" style="width: 100%;">
+
+{% endblock %}
+
+{% block right_block %}
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <input type="hidden" name="score" value="{{ score }}">
+    
+    <p>Choose your action:</p>
+    {% for subfield, choice in zip(form.action, choices) %}
+        <div class="radio">
+            {{ subfield(disabled=not choice[2], id=subfield.id) }}
+            <label for="{{ subfield.id }}">
+                {{ choice[1] | safe }}
+            </label>
+        </div>
+    {% endfor %}
+
+    <br>
+    <p>{{ form.submit(class='continue-btn') }}</p>
+</form>
+{% endblock %}

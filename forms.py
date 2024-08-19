@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import RadioField, StringField, IntegerField
+from wtforms import RadioField, StringField, IntegerField, SubmitField
 from wtforms.validators import DataRequired, NumberRange
 from wtforms.widgets import TextArea
 
@@ -8,6 +8,7 @@ class DemographicInfo(FlaskForm):
     id = StringField('Prolific ID', validators=[DataRequired()])
     gender = RadioField('Gender', choices=[('M','Male'),('F','Female'),('O','Others')], validators=[DataRequired()])
     age = IntegerField('Age', validators=[DataRequired(), NumberRange(min=18, max=80)])
+    submit = SubmitField('Continue', render_kw={'class': 'continue-btn'})
 
 eleven_point_scale = [(str(i), f'Opt{i}') for i in range(11)]
 
@@ -22,3 +23,9 @@ class EmotionForm(FlaskForm):
     # emo1_confusion = RadioField('Confusion', choices=eleven_point_scale, validators=[DataRequired()])  
     
     feedback = StringField('',validators=[DataRequired()],widget=TextArea())
+
+
+class ActionForm(FlaskForm):
+    score = IntegerField('Score', validators=[DataRequired(), NumberRange(min=0)], render_kw={'readonly': True})
+    action = RadioField('Choose an action', validators=[DataRequired(message="You must choose an action.")])
+    submit = SubmitField('Continue', render_kw={'class': 'continue-btn'})

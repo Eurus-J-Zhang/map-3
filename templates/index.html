@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
-{% block main_text %}
+
+{% block top_block %}
 <p class="t_title">
   Hello, welcome to the experiment! <br>
   <br>
@@ -39,7 +40,7 @@
   </table>
   <br>
   <br>
-  <input type="submit" value="Start" class="continue-btn">
+  <p>{{ form.submit(class='continue-btn') }}</p>
 </form>
 
 

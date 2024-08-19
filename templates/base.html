@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel= "stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
         <link rel="shortcut icon" href="#">
-        <title>Adventure</title>
+        <title>MapNavigation</title>
         {% block script %}{% endblock %}
     </head>
     <body>     
@@ -17,15 +19,27 @@
           </div>
           
 
+
         <div class="grid-parent">
 
-            <div class = "story"> 
-                {% block main_text %}{% endblock %}
+            <div class="story"> 
+                <div class="headline">
+                    {% block headline %}{% endblock %}
+                </div>
+                <div class="content-grid">
+                    <div class="top-block">
+                        {% block top_block %}{% endblock %}
+                    </div>
+                    <div class="left-block">
+                        {% block left_block %}{% endblock %}
+                    </div>
+                    <div class="right-block">
+                        {% block right_block %}{% endblock %}
+                    </div>
+                </div>
             </div>
-
-            <div class = "continue">   
-                {% block continue %}{% endblock %}
-            </div>
+        
+        
         </div>
     </body>
 </html>
