@@ -35,47 +35,37 @@ def index():
     if form.validate_on_submit():
         data = form.data
         data.pop('csrf_token', None)
+        data.pop('submit', None)
         session['index_data'] = data
         session['counter'] = 0
         return redirect(url_for('intro'))
     return render_template('index.html',form=form)
 
-@app.route('/lock_choice', methods=['GET', 'POST'])
-def handle_form():
-    if request.method == 'POST':
-        slot_choice = request.form.get('slotChoice')
-        session['final_choice'] = slot_choice
-        if slot_choice == 'A':
-            return redirect(url_for('correct'))  # Redirect to the correct page
-        elif slot_choice in ('B', 'C'):
-            return redirect(url_for('wrong')) # Redirect to the wrong page
-        else:
-            return render_template('p4.html', error='Please select an option.') 
-    return render_template('lock_choice.html')
 
 
 @app.route('/emo', methods=['GET', 'POST'])
 def emo():
-    final_choice = session.get('final_choice', None)
-    content = {
-    'B': {'image_path': 'static/img/ring.jpg'},
-    'A_C': {'image_path': 'static/img/alarm.jpg'}
-    }
-    chosen_content = content['B'] if final_choice == 'B' else content['A_C']
+    # final_choice = session.get('final_choice', None)
+    # content = {
+    # 'B': {'image_path': 'static/img/ring.jpg'},
+    # 'A_C': {'image_path': 'static/img/alarm.jpg'}
+    # }
+    # chosen_content = content['B'] if final_choice == 'B' else content['A_C']
     
     form = EmotionForm()
 
     result = handle_form_submission(form, 'emo_data', 'end')
     if result:
         index_data = session.get('index_data')
-        final_choice = session.get('final_choice')
+        # final_choice = session.get('final_choice')
         emo_data = session.get('emo_data')
-        combined_data = {**index_data, 'final_choice': final_choice, **emo_data}
+        combined_data = {**index_data, **emo_data}
+        # combined_data = {**index_data, 'final_choice': final_choice, **emo_data}
         data = Data(**combined_data)
         db.session.add(data)
         db.session.commit()
         return result
-    return render_template('emo.html',form=form,chosen_content=chosen_content)
+    return render_template('emo.html',form=form)
 
 
 # P1
@@ -524,5 +514,11 @@ def wrong():
 def end():
     return render_template('end.html')
 
+# if __name__ == "__main__":
+#     app.run(debug=True)
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Only run the development server if the script is executed directly (not via debugger)
+    import os
+    if os.getenv("FLASK_ENV") != "development":
+        app.run(debug=True)
