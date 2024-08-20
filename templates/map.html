@@ -4,14 +4,26 @@
 
 <script>
     var currentStation = "{{ station }}";
+    let currentTimeStr = "{{ current_time }}"; // Time passed from Flask, e.g., "08:32"
 
     // Function to show the modal with a message
-    function showModal(message) {
+    function showModal(message, allowClose = true) {
         var myModal = document.getElementById('myModal');
         var modalText = document.getElementById('modalText');
         if (myModal && modalText) {
             modalText.innerHTML = message; // Update the modal text
             myModal.style.display = "block";
+
+            if (!allowClose) {
+                // Hide the close button or disable it
+                var closeButton = document.getElementsByClassName("close")[0];
+                if (closeButton) {
+                    closeButton.style.display = 'none'; // Hide close button
+                }
+
+                // Prevent modal from closing when clicking outside of it
+                window.onclick = null;
+            }
         }
     }
 
@@ -20,11 +32,11 @@
         var myModal = document.getElementById('myModal');
         if (myModal) {
             myModal.style.display = "none";
-            startCountdown(); // Start the timer after closing the modal
+            // startCountdown(); // Start the timer after closing the modal
         }
     }
 
-    // Initialize the countdown timer to 120 seconds
+    // Initialize the countdown timer to 90 seconds
     let countdown = 90;
 
     // Function to start the countdown timer
@@ -41,7 +53,10 @@
             // If the countdown reaches zero, redirect to the fail page
             if (countdown < 0) {
                 clearInterval(countdownInterval);
-                window.location.href = "/wrong"; // Redirect to the fail page
+                showModal(`You have run out of time to make an action. You will be directed to the result page in 5 seconds`,false);
+                setTimeout(function() {
+                window.location.href = "/wrong"; // Redirect to the wrong.html page
+            }, 5000);
             }
         }, 1000); // Update every second
     }
@@ -52,8 +67,8 @@
         var closeButton = document.getElementsByClassName("close")[0];
         var myModal = document.getElementById('myModal');
 
-        if(closeButton && myModal) {
-            // Close modal when the close button is clicked
+        if (closeButton && myModal) {
+            // Close modal when the close button is clicked, unless it's locked
             closeButton.onclick = function() {
                 closeModal();
             };
@@ -68,30 +83,24 @@
 
         // Show the modal if the station is 'Millstone Square'
         if (currentStation === 'Millstone Square') {
-            showModal(`However, the metro stops at Millstone Square unexpectly, and could not continue to the 
+            showModal(`However, the metro stops at Millstone Square unexpectedly, and could not continue to the 
             direction of Perivale. <br>
             It is due to ongoing construction at Bagton Mere, with no metros able to pass through.  <br>
-            Please design your trip accordingly.
-            `);
+            Please design your trip accordingly.`);
         }
 
-        let currentTimeStr = "{{ current_time }}"; // Time passed from Flask, e.g., "08:32"
-        if (currentStation === 'Conby Vale' && currentTimeStr <= "09:00") {
-        
-            showModal('You have reached your destination in time! Now you can get out of the metro and finish the task.')}
-
-
-
-        // Check if the current time is equal to or later than 09:00
+        // Show the modal with no close option if the current time is >= 09:00
         if (currentTimeStr >= "09:00") {
-            showModal('Sorry, it is already 9:00 and you have not reached your destination. You will be directed to the result page in 3 seconds.');
+            showModal('Sorry, it is already 9:00 and you have not reached your destination. You will be directed to the result page in 5 seconds.', false);
             setTimeout(function() {
                 window.location.href = "/wrong"; // Redirect to the wrong.html page
-            }, 3000); // 3000 milliseconds = 3 seconds
-}
-
+            }, 5000); // 5000 milliseconds = 5 seconds
+        } else if (currentStation === 'Conby Vale' && currentTimeStr <= "09:00") {
+            showModal('You have reached your destination in time! Now you can get out of the metro and finish the task.');
+        }
     });
 </script>
+
 
 {% endblock %}
 
@@ -102,14 +111,9 @@ Goal station:   CONBY VALE
 <br><br>
 <div>
     Current station: <span style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">{{ station | upper }}</span>
-
-</div>
-<br>
-<div>
+    <br><br>
     Clock Time: <span style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">{{current_time}}</span>
-</div>
-<br>
-<div>
+    <br><br>
     Time left to make an action: 
     <span id="timer" style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">90</span> seconds
 </div>

@@ -19,7 +19,7 @@
     color:olive;
     margin-left: 10%;
     margin-right: 10%;
-    border: 1px solid olive; 
+    border: 2px dashed olive; 
     padding: 5px; 
     padding-left: 5%;
     padding-right: 5%;
@@ -237,7 +237,9 @@ form p {
 }
 
 .colored-radio {
-    display: none; /* Hide default radio button */
+    /* display: none;  */
+    opacity: 0;
+    /* Hide default radio button */
 }
 
 .colored-label {
