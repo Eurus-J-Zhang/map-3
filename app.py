@@ -4,6 +4,7 @@ from forms import EmotionForm, DemographicInfo, ActionForm
 import os
 import pymysql
 from models import db, Data
+from datetime import datetime, timedelta
 
 pymysql.install_as_MySQLdb()
 
@@ -68,20 +69,15 @@ def emo():
     return render_template('emo.html',form=form)
 
 
-# P1
-@app.route('/intro')
-def intro():
-    session['score'] = 30
-    return render_template('intro.html')
 
 
-action_a = 'Take Blue Line to the direction of S14'
-action_b = 'Take Blue Line to the direction of S1'
-action_c = 'Take Red Line to the direction of S13 '
-action_d = 'Take Red Line to the direction of S10 '
-action_e = 'Take Yellow Line clockwise '
-action_f = 'Take Yellow Line counterclockwise '
-message ='+2 mins interruption time'
+action_a = 'Take Blue Line to the direction of Perivale'
+action_b = 'Take Blue Line to the direction of Windrush Park'
+action_c = 'Take Red Line to the direction of Cockfosters '
+action_d = 'Take Red Line to the direction of Fayre End '
+action_e = 'Take Yellow Line to the direction of Cockfosters'
+action_f = 'Take Yellow Line to the direction of Giles Town '
+action_g = "Get out of the metro" 
 time_2 = '<br>Time costs: 2 mins'
 time_3 = '<br>Time costs: 3 mins'
 time_4 = '<br>Time costs: 4 mins'
@@ -90,16 +86,16 @@ time_7 = '<br>Time costs: 7 mins'
 
 def get_action_choices(station):
     """Define the action choices and their availability based on the station."""
-    if station == 's1':
+    if station == 'Giles Town':
         return [
             ('a', action_a+time_2, True),
-            ('b', action_b, False),
+            ('b', action_b+time_2, True),
             ('c', action_c, False),
             ('d', action_d, False),
             ('e', action_e+time_7, True),
-            ('f', action_f+time_7, True),
+            ('f', action_f, False),
         ]
-    elif station == 's2':
+    elif station == 'Lefting Parkway':
         return [
             ('a', action_a+time_2, True),
             ('b', action_b+time_2, True),
@@ -108,16 +104,16 @@ def get_action_choices(station):
             ('e', action_e, False),
             ('f', action_f, False),
             ]
-    elif station == 's3':
+    elif station == 'Millstone Square':
         return [
             ('a', action_a, False),
-            ('b', action_b+time_2+ message, True),
-            ('c', action_c+time_3+ message, True),
-            ('d', action_d+time_3+ message, True),
+            ('b', action_b+time_2, True),
+            ('c', action_c+time_3, True),
+            ('d', action_d+time_3, True),
             ('e', action_e, False),
             ('f', action_f, False),
         ]
-    elif station == 's7':
+    elif station == 'Donningpool North':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -126,16 +122,16 @@ def get_action_choices(station):
             ('e', action_e, False),
             ('f', action_f, False),
         ]
-    elif station == 's13':
+    elif station == 'Cockfosters':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
             ('c', action_c, False),
             ('d', action_d+time_3, True),
-            ('e', action_e+time_7, True),
+            ('e', action_e,False ),
             ('f', action_f+time_7, True),
         ]
-    elif station == 's16':
+    elif station == 'Oldgate':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -153,7 +149,7 @@ def get_action_choices(station):
             ('e', action_e+time_7, True),
             ('f', action_f+time_7, True),
         ]
-    elif station == 's6':
+    elif station == 'Chigwell':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -162,7 +158,7 @@ def get_action_choices(station):
             ('e', action_e, False),
             ('f', action_f, False),
         ]
-    elif station == 's8':
+    elif station == 'Grunham Holt':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -171,7 +167,7 @@ def get_action_choices(station):
             ('e', action_e+time_4, True),
             ('f', action_f+time_7, True),
         ]
-    elif station == 's10':
+    elif station == 'Fayre End':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -180,7 +176,7 @@ def get_action_choices(station):
             ('e', action_e, False),
             ('f', action_f, False),
         ]
-    elif station == 's11':
+    elif station == 'Tallow Hill':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -189,7 +185,7 @@ def get_action_choices(station):
             ('e', action_e+time_4, True),
             ('f', action_f+time_4, True),
         ]
-    elif station == 's12':
+    elif station == 'Mudchute':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -198,7 +194,7 @@ def get_action_choices(station):
             ('e', action_e+time_4, True),
             ('f', action_f+time_4, True),
         ]
-    elif station == 's17':
+    elif station == 'Epping':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -207,7 +203,16 @@ def get_action_choices(station):
             ('e', action_e+time_4, True),
             ('f', action_f+time_4, True),
         ]
-    elif station == 's5':
+    elif station == 'Wofford Cross':
+        return [
+            ('a', action_a+time_2, True),
+            ('b', action_b+time_2, True),
+            ('c', action_c, False),
+            ('d', action_d, False),
+            ('e', action_e+time_7, True),
+            ('f', action_f+time_4, True),
+        ]
+    elif station == 'Conby Vale':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -215,55 +220,99 @@ def get_action_choices(station):
             ('d', action_d, False),
             ('e', action_e, False),
             ('f', action_f, False),
-            ('g', "Get out of the metro", True),
+            ('g', action_g, True),
+        ]
+    elif station == 'Conby Down':
+        return [
+            ('a', action_a, False),
+            ('b', action_b, False),
+            ('c', action_c, False),
+            ('d', action_d, False),
+            ('e', action_e+time_7, True),
+            ('f', action_f+time_4, True),
+        ]
+    elif station == 'Thornbury Fields':
+        return [
+            ('a', action_a, False),
+            ('b', action_b, False),
+            ('c', action_c, False),
+            ('d', action_d, False),
+            ('e', action_e+time_7, True),
+            ('f', action_f+time_7, True),
+        ]
+    elif station == 'Windrush Park':
+        return [
+            ('a', action_a+time_2, True),
+            ('b', action_b, False),
+            ('c', action_c, False),
+            ('d', action_d, False),
+            ('e', action_e, False),
+            ('f', action_f, False),
         ]
 
 
+def process_action(time_cost, redirect_target):
+    """Process the action by updating time, score, and redirecting."""
+    session['score'] -= time_cost
+    current_time_str = session.get('current_time')
+    current_time = datetime.strptime(current_time_str, '%H:%M')
+    current_time += timedelta(minutes=time_cost)
+    session['current_time'] = current_time.strftime('%H:%M')
+    return redirect(url_for(redirect_target))
+
+# intro
+@app.route('/intro')
+def intro():
+    session['score'] = 30
+    session['current_time'] = '08:30'
+    station = 'Giles Town'
+    
+    form = ActionForm()
+    choices = get_action_choices(station)
+    form.action.choices = [(value, label) for value, label, is_disabled in choices]
+    
+    return render_template('intro.html',form=form,zip=zip,station=station, choices=choices)
 
 @app.route('/s1', methods=['GET', 'POST'])
 def s1():
     form = ActionForm()
-    station = 's1'
+    station = 'Giles Town'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'a':
-            session['score'] -= 2
-            return redirect(url_for('s2'))
+            return process_action(2, 's2')
+        elif action == 'b':
+            return process_action(2, 's18')
         elif action == 'e':
-            session['score'] -= 7
-            return redirect(url_for('s8'))
-        elif action == 'f':
-            session['score'] -= 7
-            return redirect(url_for('s13'))
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices=choices)
+            return process_action(4, 's19')
+
+    return render_template('map.html', form=form, score=session['score'],current_time=session['current_time'], zip=zip, station=station, choices=choices)
 
 # s2
 @app.route('/s2', methods=['GET', 'POST'])
 def s2():
     form = ActionForm()
-    station = 's2'
+    station = 'Lefting Parkway'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'a':
-            session['score'] -= 2
-            return redirect(url_for('s3'))
+            return process_action(2, 's3')
         elif action == 'b':
-            session['score'] -= 2
-            return redirect(url_for('s1'))
+            return process_action(2, 's1')
 
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'],zip=zip, station=station, choices = choices)
 
 # s3
 @app.route('/s3', methods=['GET', 'POST'])
 def s3():
     form = ActionForm()
-    station = 's3'
+    station = 'Millstone Square'
     choices = get_action_choices(station)
     # Set the choices for the action field
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
@@ -271,22 +320,19 @@ def s3():
     if form.validate_on_submit():
         action = form.action.data
         if action == 'b':
-            session['score'] -= 4
-            return redirect(url_for('s2'))
+            return process_action(2, 's2')
         elif action == 'c':
-            session['score'] -= 5
-            return redirect(url_for('s7'))
+            return process_action(3, 's7')
         elif action == 'd':
-            session['score'] -= 5
-            return redirect(url_for('s6'))
+            return process_action(3, 's6')
 
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s7
 @app.route('/s7', methods=['GET', 'POST'])
 def s7():
     form = ActionForm()
-    station = 's7'
+    station = 'Donningpool North'
     choices = get_action_choices(station)
     # Set the choices for the action field
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
@@ -294,174 +340,152 @@ def s7():
     if form.validate_on_submit():
         action = form.action.data
         if action == 'c':
-            session['score'] -= 3
-            return redirect(url_for('s13'))
+            return process_action(3, 's13')
         elif action == 'd':
-            session['score'] -= 3
-            return redirect(url_for('s3'))
+            return process_action(3, 's3')
 
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s13
 @app.route('/s13', methods=['GET', 'POST'])
 def s13():
     form = ActionForm()
-    station = 's13'
+    station = 'Cockfosters'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'd':
-            session['score'] -= 3
-            return redirect(url_for('s7'))
-        elif action == 'e':
-            session['score'] -= 7
-            return redirect(url_for('s1'))
+            return process_action(3, 's7')
         elif action == 'f':
-            session['score'] -= 7
-            return redirect(url_for('s16'))
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+            return process_action(7, 's16')
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s16
 @app.route('/s16', methods=['GET', 'POST'])
 def s16():
     form = ActionForm()
-    station = 's16'
+    station = 'Oldgate'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
-            session['score'] -= 7
-            return redirect(url_for('s13'))
+            return process_action(7, 's13')
         elif action == 'f':
-            session['score'] -= 7
-            return redirect(url_for('s15'))
+            return process_action(7, 's15')
 
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s15
 @app.route('/s15', methods=['GET', 'POST'])
 def s15():
     form = ActionForm()
-    station = 's15'
+    station = 'Thornbury Fields'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
-            session['score'] -= 7
-            return redirect(url_for('s16'))
+            return process_action(7, 's16')
         elif action == 'f':
-            session['score'] -= 7
-            return redirect(url_for('s5'))
+            return process_action(7, 's5')
 
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s6
 @app.route('/s6', methods=['GET', 'POST'])
 def s6():
     form = ActionForm()
-    station = 's6'
+    station = 'Chigwell'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'c':
-            session['score'] -= 3
-            return redirect(url_for('s3'))
+            return process_action(3, 's3')
         elif action == 'd':
-            session['score'] -= 3
-            return redirect(url_for('s8'))
+            return process_action(3, 's8')
         
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s8
 @app.route('/s8', methods=['GET', 'POST'])
 def s8():
     form = ActionForm()
-    station = 's8'
+    station = 'Grunham Holt'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'c':
-            session['score'] -= 3
-            return redirect(url_for('s6'))
+            return process_action(3, 's6')
         elif action == 'd':
-            session['score'] -= 3
-            return redirect(url_for('s10'))
+            return process_action(3, 's10')
         elif action == 'e':
-            session['score'] -= 4
-            return redirect(url_for('s11'))
+            return process_action(4, 's11')
         elif action == 'f':
-            session['score'] -= 7
-            return redirect(url_for('s1'))
+            return process_action(7, 's19')
         
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s10
 @app.route('/s10', methods=['GET', 'POST'])
 def s10():
     form = ActionForm()
-    station = 's10'
+    station = 'Fayre End'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'c':
-            session['score'] -= 3
-            return redirect(url_for('s10'))
+            return process_action(3, 's8')
         
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s11
 @app.route('/s11', methods=['GET', 'POST'])
 def s11():
     form = ActionForm()
-    station = 's11'
+    station = 'Tallow Hill'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
-            session['score'] -= 4
-            return redirect(url_for('s12'))
+            return process_action(4, 's12')
         elif action == 'f':
-            session['score'] -= 4
-            return redirect(url_for('s8'))
+            return process_action(4, 's8')
         
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s12
 @app.route('/s12', methods=['GET', 'POST'])
 def s12():
     form = ActionForm()
-    station = 's12'
+    station = 'Mudchute'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
-            session['score'] -= 4
-            return redirect(url_for('s17'))
+            return process_action(4, 's17')
         elif action == 'f':
-            session['score'] -= 4
-            return redirect(url_for('s11'))
+            return process_action(4, 's11')
         
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 
@@ -469,34 +493,84 @@ def s12():
 @app.route('/s17', methods=['GET', 'POST'])
 def s17():
     form = ActionForm()
-    station = 's17'
+    station = 'Epping'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
-            session['score'] -= 4
-            return redirect(url_for('s5'))
+            return process_action(4, 's5')
         elif action == 'f':
-            session['score'] -= 4
-            return redirect(url_for('s12'))
+            return process_action(4, 's12')
         
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
-# s5
-@app.route('/s5', methods=['GET', 'POST'])
-def s5():
+# s4
+@app.route('/s4', methods=['GET', 'POST'])
+def s4():
     form = ActionForm()
-    station = 's5'
+    station = 'Conby Vale'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
     if form.validate_on_submit():
         action = form.action.data
         if action == 'g':
             return redirect(url_for('emo'))        
-    return render_template('map.html', form=form, score=session['score'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
+
+# s5
+@app.route('/s5', methods=['GET', 'POST'])
+def s5():
+    form = ActionForm()
+    station = 'Wofford Cross'
+    choices = get_action_choices(station)
+    form.action.choices = [(value, label) for value, label, is_disabled in choices]
+    if form.validate_on_submit():
+        action = form.action.data
+        if action == 'a':
+            return process_action(2, 's14')
+        elif action == 'b':
+            return process_action(2, 's4')
+        elif action == 'e':
+            return process_action(7, 's15')
+        elif action == 'f':
+            return process_action(4, 's17')
+  
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+
+# s18
+@app.route('/s18', methods=['GET', 'POST'])
+def s18():
+    form = ActionForm()
+    station = 'Windrush Park'
+    choices = get_action_choices(station)
+    form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    if form.validate_on_submit():
+        action = form.action.data
+        if action == 'a':
+            return process_action(2, 's1')
+        
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+
+# s19
+@app.route('/s19', methods=['GET', 'POST'])
+def s19():
+    form = ActionForm()
+    station = 'Conby Down'
+    choices = get_action_choices(station)
+    form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    if form.validate_on_submit():
+        action = form.action.data
+        if action == 'e':
+            return process_action(7, 's8')
+        elif action == 'f':
+            return process_action(4, 's1')
+        
+    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # r_correct

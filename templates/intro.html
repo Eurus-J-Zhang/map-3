@@ -1,3 +1,5 @@
+
+
 {% extends 'base.html' %}
 
 {% block script %}
@@ -6,55 +8,109 @@
         window.location="s1";
     }
 </script>
- {% endblock %}
+{% endblock %}
 
+{% block headline %}
 
-{% block top_block %}
-
-<p class="t_title">
-
-Your task is to navigate the metro lines from "S1" to "S5".
-<!-- You will be provided with a map to guide you.  -->
-Keep in mind that you have a limited amount of time to reach your destination, so avoid unnecessary detours. 
-The remaining time will be displayed, along with the time costs associated with your possible actions. 
-
-
-
-    <!-- You are a passenger using public transport for your daily work commute. 
-    You live on Niall Street and usually take the metro Blue Line to Admiralty for work. 
-    Recently, you heard that one of the stations would undergo
-    construction, preventing any metro trains from passing through. Although you were aware 
-    of the construction, you didn't remember the exact start date or which station would be 
-    affected.  -->
+<p class="t_note">
+    Welcome to the game introduction! The actual game interface will look just like this,
+    with all these red notes hidden. Please use this page to familiarize yourself with the game and plan your route in advance, 
+    making it easier when the timer is running in the actual game. <br><br>
+    Your task is to navigate the metro lines from <b>Giles Town</b> to <b>Condy Vale</b>.
+    You will depart from Giles Town at 8:30, and must reach Condy Vale before 9:00 for an important meeting. 
     
-    <!-- <br><br>
-    Today, on your way to work, the metro stops unexpectly at City Square.
-    An announcement informs all passengers that they 
-    must disembark because the next station is under construction, and 
-    the train will be returning in the opposite direction.
-    You now realize that the construction at St.Alba has begun. 
+    Please calculate your time carefully and avoid unnecessary detours to ensure you arrive in time. 
+<br><br>
+    At each station, you will have 90 seconds to make a decision. After selecting your choice and clicking "Continue", 
+    you will be led to the next station. The clock time will increase according to your selection,
+    but the 90-seconds decision time will not affect the clock. 
+
     <br><br>
-    Forced to exit the metro at City Square, you need to find an alternative route to reach your destination. 
-    You have a digital map app on your phone to assist you. As you exit the metro station, you 
-    notice the next metro on the Red Line towards Crown Height will depart in 2 minutes. 
-    You need to decide whether you should take this metro or not, as any wrong 
-    decision could make you late for an important meeting. -->
+    There might be situations happening in the process, stay alert, it is part of the game. 
+
     <br><br>
-    
-
-
-
+    How to win this game?
     <br>
-    <div class="container">
-        <img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Example Image" style="width: 500px;">
-    </div>
+    &nbsp;&nbsp;&nbsp;Arrive at Condy Vale before 9:00.
+
     <br><br>
-<!-- The figure here should include the tram as well. -->
+    How might you lose this game?<br>
+    &nbsp;&nbsp;&nbsp;Failing to arrive at Condy Vale by 9:00. <br>
+    &nbsp;&nbsp;&nbsp;Taking more than 90 seconds to make a decision at any station.
+
 </p>
 
 
-Please click the button "Continue" to access the game. 
-<br><br>
+{% endblock %}
+
+{% block top_block %}
+
+<p class="t_note">
+    Here shows your current station, current clock time, and the time you have left to make an 
+    action.<br>
+    They will change accordingly after you make a move. 
+</p>
+
+Current station: <b>GILES TOWN</b><br>
+Clock Time: <b>8:30</b><br>
+Time left to make an action: 90 seconds
+    <br>
+{% endblock %}
+
+
+
+{% block left_block %}
+<p class="t_note">
+    Here is the metro map for you to design your trip. <br>
+    In this game, the time cost for metro transfers is not considered. 
+</p>
+<p class="t_content">    
+    It taks 2 mins between each Blue Line station. <br>
+    It takes 3 mins between each Red Line station. <br>
+    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br>
+</p>
+
+
+<br>
+<div class="container">
+    <img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Example Image" style="width: 90%;">
+</div>
+
+{% endblock %}
+
+{% block right_block %}
+<p class="t_note">
+    Here you can choose your action, it will lead you to the next station, and the clock time will increase. 
+    <br>The available choices would be in its metro color, while the unavailable ones would be in grey. 
+
+    </p>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="score" value="{{ score }}">
+        
+        <p>Choose your action:</p>
+        {% for subfield, choice in zip(form.action, choices) %}
+            <div class="radio">
+                {{ subfield(disabled=not choice[2], id=subfield.id, class_="colored-radio " + choice[0]) }}
+                <label for="{{ subfield.id }}" class="colored-label {{ choice[0] }}">
+                    {{ choice[1] | safe }}
+                </label>
+            </div>
+        {% endfor %}
+    
+        <br>
+
+    </form>
+
+    </form>
+<p class="t_note">
+    <br>If you have understand everything, please click the button "Continue" to access the game. 
+
+
+</p>
+
+
 
 <button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
 

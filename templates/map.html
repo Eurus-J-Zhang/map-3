@@ -5,6 +5,7 @@
 <script>
     var currentStation = "{{ station }}";
 
+
     // Function to show the modal with a message
     function showModal(message) {
         var myModal = document.getElementById('myModal');
@@ -25,7 +26,7 @@
     }
 
     // Initialize the countdown timer to 120 seconds
-    let countdown = 120;
+    let countdown = 90;
 
     // Function to start the countdown timer
     function startCountdown() {
@@ -48,6 +49,7 @@
 
     // Set up close functionality
     document.addEventListener('DOMContentLoaded', function() {
+        // startCountdown();
         var closeButton = document.getElementsByClassName("close")[0];
         var myModal = document.getElementById('myModal');
 
@@ -65,64 +67,64 @@
             };
         }
 
-        // Show the modal if the station is 's3'
-        if (currentStation === 's3') {
-            showModal(`However, the metro stops at s3 unexpectly, and could not continue to the 
-            direction of s14. <br>
-            It is due to ongoing construction at s4, with no metros able to pass through.  <br>
+        // Show the modal if the station is 'Millstone Square'
+        if (currentStation === 'Millstone Square') {
+            showModal(`However, the metro stops at Millstone Square unexpectly, and could not continue to the 
+            direction of Perivale. <br>
+            It is due to ongoing construction at Bagton Mere, with no metros able to pass through.  <br>
             Please design your trip accordingly.
-            <br><br>
-            Note: you have maximum of 2 minutes to decide your next action. 
-            <br>If you don't act within this time, you'll miss the next metro, ensuring you will be late and fail the task. 
-            <br>A timer will start upon closing this message. 
+
             `);
         }
 
-        let currentScore = parseInt("{{ score }}", 10); 
+        // let currentScore = parseInt("{{ score }}", 10); 
 
         // Check the score and show the modal if score <= 0
-        if (currentScore <= 0) {
-            // showFailModal('messages');
-            showModal('Sorry, you have run out of time. You will be directed to the result page in 3 seconds.');
+        // if (currentScore <= 0) {
+        //     // showFailModal('messages');
+        //     showModal('Sorry, you have run out of time. You will be directed to the result page in 3 seconds.');
+        //     setTimeout(function() {
+        //         window.location.href = "/wrong"; // Redirect to the wrong.html page
+        //     }, 3000); // 3000 milliseconds = 3 seconds
+        // }
+        if (currentStation === 'Conby Vale' && currentScore > 0) {
+        
+            showModal('You have reached your destination! Now you can get out of the metro and finish the task.')}
+
+        let currentTimeStr = "{{ current_time }}"; // Time passed from Flask, e.g., "08:32"
+
+        // Check if the current time is equal to or later than 09:00
+        if (currentTimeStr >= "09:00") {
+            showModal('Sorry, it is already 9:00 and you have not reached your destination. You will be directed to the result page in 3 seconds.');
             setTimeout(function() {
                 window.location.href = "/wrong"; // Redirect to the wrong.html page
             }, 3000); // 3000 milliseconds = 3 seconds
-        }
-        if (currentStation === 's5' && currentScore > 0) {
-            showModal('You have reached your destination! Now you can get out of the metro and finish the task.')}
+}
 
     });
 </script>
-<!-- <script src="{{ url_for('static', filename='js/map.js') }}"></script> -->
+
 {% endblock %}
 
 
 
 {% block headline %}
-<!-- Modal for station s3 -->
-{% if station == 's3' %}
-<!-- <div id="myModal" class="modal"> -->
-    <!-- <div class="modal-content">
-        <span class="close">&times;</span> -->
-        <!-- <p id="modalText">Some text in the Modal..</p> -->
-    <!-- </div> -->
-<!-- </div> -->
-<br>
-Time left to make a decision: <span id="timer">120</span> seconds
-<br>
-{% endif %}
-
 
 <p class="t_title">
-    Current station: {{ station | upper }}
-    <br>
-    Time left: {{ score }} mins
+
 
 </p>
+
 {% endblock %}
 
 {% block top_block %}
-Please select an action and click “continue”. Note: the action you choose would lead you to the next metro station. 
+Current station: {{ station | upper }}
+<br>
+Clock Time:{{current_time}} 
+<br>
+<!-- Time left: {{ score }} -->
+<br>
+Time left to make an action: <span id="timer">90</span> seconds
 {% endblock %}
 <br><br>
 
@@ -139,8 +141,8 @@ Please select an action and click “continue”. Note: the action you choose wo
     <p>Choose your action:</p>
     {% for subfield, choice in zip(form.action, choices) %}
         <div class="radio">
-            {{ subfield(disabled=not choice[2], id=subfield.id) }}
-            <label for="{{ subfield.id }}">
+            {{ subfield(disabled=not choice[2], id=subfield.id, class_="colored-radio " + choice[0]) }}
+            <label for="{{ subfield.id }}" class="colored-label {{ choice[0] }}">
                 {{ choice[1] | safe }}
             </label>
         </div>
