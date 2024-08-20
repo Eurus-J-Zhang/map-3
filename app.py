@@ -46,12 +46,6 @@ def index():
 
 @app.route('/emo', methods=['GET', 'POST'])
 def emo():
-    # final_choice = session.get('final_choice', None)
-    # content = {
-    # 'B': {'image_path': 'static/img/ring.jpg'},
-    # 'A_C': {'image_path': 'static/img/alarm.jpg'}
-    # }
-    # chosen_content = content['B'] if final_choice == 'B' else content['A_C']
     
     form = EmotionForm()
 
@@ -253,7 +247,7 @@ def get_action_choices(station):
 
 def process_action(time_cost, redirect_target):
     """Process the action by updating time, score, and redirecting."""
-    session['score'] -= time_cost
+    # session['score'] -= time_cost
     current_time_str = session.get('current_time')
     current_time = datetime.strptime(current_time_str, '%H:%M')
     current_time += timedelta(minutes=time_cost)
@@ -263,7 +257,7 @@ def process_action(time_cost, redirect_target):
 # intro
 @app.route('/intro')
 def intro():
-    session['score'] = 30
+    # session['score'] = 30
     session['current_time'] = '08:30'
     station = 'Giles Town'
     
@@ -271,7 +265,7 @@ def intro():
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
     
-    return render_template('intro.html',form=form,zip=zip,station=station, choices=choices)
+    return render_template('intro.html',form=form,zip=zip,station=station, choices=choices,current_time=session['current_time'])
 
 @app.route('/s1', methods=['GET', 'POST'])
 def s1():
@@ -289,7 +283,7 @@ def s1():
         elif action == 'e':
             return process_action(4, 's19')
 
-    return render_template('map.html', form=form, score=session['score'],current_time=session['current_time'], zip=zip, station=station, choices=choices)
+    return render_template('map.html', form=form ,current_time=session['current_time'], zip=zip, station=station, choices=choices)
 
 # s2
 @app.route('/s2', methods=['GET', 'POST'])
@@ -306,7 +300,7 @@ def s2():
         elif action == 'b':
             return process_action(2, 's1')
 
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'],zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form , current_time=session['current_time'],zip=zip, station=station, choices = choices)
 
 # s3
 @app.route('/s3', methods=['GET', 'POST'])
@@ -326,7 +320,7 @@ def s3():
         elif action == 'd':
             return process_action(3, 's6')
 
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form , current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s7
 @app.route('/s7', methods=['GET', 'POST'])
@@ -344,7 +338,7 @@ def s7():
         elif action == 'd':
             return process_action(3, 's3')
 
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form , current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s13
@@ -361,7 +355,7 @@ def s13():
             return process_action(3, 's7')
         elif action == 'f':
             return process_action(7, 's16')
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s16
 @app.route('/s16', methods=['GET', 'POST'])
@@ -378,7 +372,7 @@ def s16():
         elif action == 'f':
             return process_action(7, 's15')
 
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s15
 @app.route('/s15', methods=['GET', 'POST'])
@@ -395,7 +389,7 @@ def s15():
         elif action == 'f':
             return process_action(7, 's5')
 
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s6
 @app.route('/s6', methods=['GET', 'POST'])
@@ -412,7 +406,7 @@ def s6():
         elif action == 'd':
             return process_action(3, 's8')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s8
@@ -434,7 +428,7 @@ def s8():
         elif action == 'f':
             return process_action(7, 's19')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s10
@@ -450,7 +444,7 @@ def s10():
         if action == 'c':
             return process_action(3, 's8')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s11
@@ -468,7 +462,7 @@ def s11():
         elif action == 'f':
             return process_action(4, 's8')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s12
 @app.route('/s12', methods=['GET', 'POST'])
@@ -485,7 +479,7 @@ def s12():
         elif action == 'f':
             return process_action(4, 's11')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 
@@ -504,7 +498,7 @@ def s17():
         elif action == 'f':
             return process_action(4, 's12')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s4
 @app.route('/s4', methods=['GET', 'POST'])
@@ -517,7 +511,7 @@ def s4():
         action = form.action.data
         if action == 'g':
             return redirect(url_for('emo'))        
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s5
@@ -538,7 +532,7 @@ def s5():
         elif action == 'f':
             return process_action(4, 's17')
   
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s18
 @app.route('/s18', methods=['GET', 'POST'])
@@ -553,7 +547,7 @@ def s18():
         if action == 'a':
             return process_action(2, 's1')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 # s19
 @app.route('/s19', methods=['GET', 'POST'])
@@ -570,7 +564,7 @@ def s19():
         elif action == 'f':
             return process_action(4, 's1')
         
-    return render_template('map.html', form=form, score=session['score'], current_time=session['current_time'], zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # r_correct

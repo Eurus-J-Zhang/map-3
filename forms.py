@@ -26,6 +26,6 @@ class EmotionForm(FlaskForm):
 
 
 class ActionForm(FlaskForm):
-    score = IntegerField('Score', validators=[DataRequired(), NumberRange(min=0)], render_kw={'readonly': True})
+    # score = IntegerField('Score', validators=[DataRequired(), NumberRange(min=0)], render_kw={'readonly': True})
     action = RadioField('Choose an action', validators=[DataRequired(message="You must choose an action.")])
     submit = SubmitField('Continue', render_kw={'class': 'continue-btn'})

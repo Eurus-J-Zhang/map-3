@@ -50,11 +50,18 @@
     action.<br>
     They will change accordingly after you make a move. 
 </p>
-
-Current station: <b>GILES TOWN</b><br>
-Clock Time: <b>8:30</b><br>
-Time left to make an action: 90 seconds
-    <br>
+<div>
+    Current station: <span style="border: 1px solid #000; padding: 5px; padding-left: 3%;padding-right: 3%;border-radius: 3px;">{{ station | upper }}</span>
+</div>
+<br>
+<div>
+    Clock Time: <span style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">{{current_time}}</span>
+</div>
+<br>
+<div>
+    Time left to make an action: 
+    <span id="timer" style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">90</span> seconds
+</div>
 {% endblock %}
 
 
@@ -87,7 +94,6 @@ Time left to make an action: 90 seconds
 
     <form method="POST">
         {{ form.hidden_tag() }}
-        <input type="hidden" name="score" value="{{ score }}">
         
         <p>Choose your action:</p>
         {% for subfield, choice in zip(form.action, choices) %}
