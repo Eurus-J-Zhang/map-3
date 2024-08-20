@@ -16,11 +16,26 @@
 .t_note{
     font-size: 18px;
     font-family: "Georgia", sans-serif;
-    color:brown
+    color:olive;
+    margin-left: 10%;
+    margin-right: 10%;
+    border: 1px solid olive; 
+    padding: 5px; 
+    padding-left: 5%;
+    padding-right: 5%;
+    border-radius: 3px;
+}
+
+.t_map{
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .t_content{
     font-size: 20px;
+    text-align: left;
+    margin-left: 15%;
+    margin-right: 15%;
 }
 
 form {
@@ -44,12 +59,14 @@ form p {
     font-size: 18px;
     cursor: pointer;
     float: right;
-    margin-top: 20px; 
-    margin-right: 10px; 
+    /* margin-top: 20px;  */
+    margin-right: 5%; 
 }
 
-.my-table td {
-    padding-right: 20px;
+.my-table {
+    /* padding-right: 20px; */
+    width: 40%;
+
 }
 
 .radio-button {
@@ -159,13 +176,6 @@ form p {
     gap: 10px; /* Adjust the gap as needed */
 }
 
-.headline {
-    grid-row: 1;
-    /* font-size: 1.5em; Adjust the font size as needed */
-    /* text-align: center; Center the headline */
-    /* padding-bottom: 5px; Adjust spacing as needed */
-}
-
 .content-grid {
     display: grid;
     grid-template-columns: 3fr 2fr;
@@ -176,7 +186,8 @@ form p {
 .top-block {
     grid-column: 1 / span 2; /* Span across both columns */
     padding: 10px; /* Add some padding */
-    border: 1px solid #ccc; /* Optional: Add a border */
+    /* border: 1px solid #ccc;  */
+    /* Optional: Add a border */
     margin-bottom: 10px; /* Optional: Add spacing below */
     font-size: 20px;
     text-align: center;
@@ -184,14 +195,15 @@ form p {
 
 .left-block, .right-block {
     padding: 10px; /* Add some padding to the blocks */
-    border: 1px solid #ccc; /* Optional: Add a border */
+    /* border: 1px solid #ccc;  */
+    /* Optional: Add a border */
 }
 
 
 
 .headline {
     padding: 10px; /* Add some padding to the blocks */
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
 }
 
 /* for the radio buttons */
@@ -263,5 +275,21 @@ input:not([disabled]) + .g{
     background-color: #f17731;
     border-color: #f17731;
     color: white;
+}
+
+.form-container {
+    width: 80%; /* Adjust the width as necessary */
+    margin: 0 auto;
+    text-align: center;
+}
+
+.form-container form {
+    width: 100%;
+}
+
+table {
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
 }
 

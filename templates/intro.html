@@ -13,16 +13,16 @@
 {% block headline %}
 
 <p class="t_note">
-    Welcome to the game introduction! The actual game interface will look just like this,
-    with all these red notes hidden. Please use this page to familiarize yourself with the game and plan your route in advance, 
+    Welcome to the game introduction!<br>
+    Please use this page to familiarize yourself with the game interface and plan your route in advance, 
     making it easier when the timer is running in the actual game. <br><br>
-    Your task is to navigate the metro lines from <b>Giles Town</b> to <b>Condy Vale</b>.
+    Your task is to navigate the metro lines from station <b>Giles Town</b> to <b>Condy Vale</b>.<br>
     You will depart from Giles Town at 8:30, and must reach Condy Vale before 9:00 for an important meeting. 
-    
+    <br>
     Please calculate your time carefully and avoid unnecessary detours to ensure you arrive in time. 
 <br><br>
-    At each station, you will have 90 seconds to make a decision. After selecting your choice and clicking "Continue", 
-    you will be led to the next station. The clock time will increase according to your selection,
+    At each station, you will have 90 seconds to make a decision. <br>After selecting your choice and clicking "Continue", 
+    you will be led to the next station. <br>The clock time will increase according to your selection,
     but the 90-seconds decision time will not affect the clock. 
 
     <br><br>
@@ -46,10 +46,13 @@
 {% block top_block %}
 
 <p class="t_note">
-    Here shows your current station, current clock time, and the time you have left to make an 
+    Here shows your goal staion, current station, current clock time, and the time you have left to make an 
     action.<br>
-    They will change accordingly after you make a move. 
+    The current station and clock time will change according to your action. 
 </p>
+Goal Station:   CONBY VALE
+<br><br>
+
 <div>
     Current station: <span style="border: 1px solid #000; padding: 5px; padding-left: 3%;padding-right: 3%;border-radius: 3px;">{{ station | upper }}</span>
 </div>
@@ -71,8 +74,8 @@
     Here is the metro map for you to design your trip. <br>
     In this game, the time cost for metro transfers is not considered. 
 </p>
-<p class="t_content">    
-    It taks 2 mins between each Blue Line station. <br>
+<p class="t_map">    
+    It takes 2 mins between each Blue Line station. <br>
     It takes 3 mins between each Red Line station. <br>
     It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br>
 </p>
@@ -87,7 +90,7 @@
 
 {% block right_block %}
 <p class="t_note">
-    Here you can choose your action, it will lead you to the next station, and the clock time will increase. 
+    Here you can choose your action, it will lead you to the next station, and the clock time will increase accordingly. 
     <br>The available choices would be in its metro color, while the unavailable ones would be in grey. 
 
     </p>
@@ -95,7 +98,7 @@
     <form method="POST">
         {{ form.hidden_tag() }}
         
-        <p>Choose your action:</p>
+        <p>Please select your action and continue:</p>
         {% for subfield, choice in zip(form.action, choices) %}
             <div class="radio">
                 {{ subfield(disabled=not choice[2], id=subfield.id, class_="colored-radio " + choice[0]) }}
@@ -105,19 +108,19 @@
             </div>
         {% endfor %}
     
-        <br>
+
 
     </form>
 
-    </form>
+    <br>
 <p class="t_note">
-    <br>If you have understand everything, please click the button "Continue" to access the game. 
+    If you have understood everything, please click the button "Continue" to access the game. All the notes in the box will disappear there. 
 
 
 </p>
 
 
-
+<br>
 <button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
 
 {% endblock %}

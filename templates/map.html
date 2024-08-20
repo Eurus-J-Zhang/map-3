@@ -48,7 +48,7 @@
 
     // Set up close functionality
     document.addEventListener('DOMContentLoaded', function() {
-        // startCountdown();
+        startCountdown();
         var closeButton = document.getElementsByClassName("close")[0];
         var myModal = document.getElementById('myModal');
 
@@ -72,15 +72,15 @@
             direction of Perivale. <br>
             It is due to ongoing construction at Bagton Mere, with no metros able to pass through.  <br>
             Please design your trip accordingly.
-
             `);
         }
 
+        let currentTimeStr = "{{ current_time }}"; // Time passed from Flask, e.g., "08:32"
         if (currentStation === 'Conby Vale' && currentTimeStr <= "09:00") {
         
-            showModal('You have reached your destination! Now you can get out of the metro and finish the task.')}
+            showModal('You have reached your destination in time! Now you can get out of the metro and finish the task.')}
 
-        let currentTimeStr = "{{ current_time }}"; // Time passed from Flask, e.g., "08:32"
+
 
         // Check if the current time is equal to or later than 09:00
         if (currentTimeStr >= "09:00") {
@@ -97,8 +97,12 @@
 
 
 {% block top_block %}
+
+Goal station:   CONBY VALE
+<br><br>
 <div>
     Current station: <span style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">{{ station | upper }}</span>
+
 </div>
 <br>
 <div>
@@ -115,15 +119,33 @@
 <br><br>
 
 {% block left_block %}
-<img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Example Image" style="width: 100%;">
 
+
+
+{% if session.get('s3_visited') %}
+<p class="t_map">    
+    It takes 2 mins between each Blue Line station. <br>
+    It takes 3 mins between each Red Line station. <br>
+    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br>
+    <span style="color: red;">Station Bagton Mere is not accessible.</span>
+</p>
+    <img src="{{ url_for('static', filename='img/map_with_error.jpg') }}" alt="New Map" style="width: 100%;">
+{% else %}
+<p class="t_map">    
+    It takes 2 mins between each Blue Line station. <br>
+    It takes 3 mins between each Red Line station. <br>
+    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br>
+</p>
+    <img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Original Map" style="width: 100%;">
+{% endif %}
 {% endblock %}
 
 {% block right_block %}
 <form method="POST">
     {{ form.hidden_tag() }}
-    
-    <p>Choose your action:</p>
+    <br>
+    <p class="t_map">Please select your action and continue:</p>
+    <br>
     {% for subfield, choice in zip(form.action, choices) %}
         <div class="radio">
             {{ subfield(disabled=not choice[2], id=subfield.id, class_="colored-radio " + choice[0]) }}
@@ -133,7 +155,7 @@
         </div>
     {% endfor %}
 
-    <br>
+    <br><br>
     <p>{{ form.submit(class='continue-btn') }}</p>
 </form>
 {% endblock %}

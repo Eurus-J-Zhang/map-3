@@ -43,7 +43,6 @@ def index():
     return render_template('index.html',form=form)
 
 
-
 @app.route('/emo', methods=['GET', 'POST'])
 def emo():
     
@@ -86,7 +85,7 @@ def get_action_choices(station):
             ('b', action_b+time_2, True),
             ('c', action_c, False),
             ('d', action_d, False),
-            ('e', action_e+time_7, True),
+            ('e', action_e+time_4, True),
             ('f', action_f, False),
         ]
     elif station == 'Lefting Parkway':
@@ -134,7 +133,7 @@ def get_action_choices(station):
             ('e', action_e+time_7, True),
             ('f', action_f+time_7, True),
         ]
-    elif station == 's15':
+    elif station == 'Thornbury Fields':
         return [
             ('a', action_a, False),
             ('b', action_b, False),
@@ -247,7 +246,6 @@ def get_action_choices(station):
 
 def process_action(time_cost, redirect_target):
     """Process the action by updating time, score, and redirecting."""
-    # session['score'] -= time_cost
     current_time_str = session.get('current_time')
     current_time = datetime.strptime(current_time_str, '%H:%M')
     current_time += timedelta(minutes=time_cost)
@@ -260,12 +258,12 @@ def intro():
     # session['score'] = 30
     session['current_time'] = '08:30'
     station = 'Giles Town'
-    
+    session['s3_visited'] = False 
     form = ActionForm()
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
     
-    return render_template('intro.html',form=form,zip=zip,station=station, choices=choices,current_time=session['current_time'])
+    return render_template('intro.html',form=form,zip=zip,station=station, choices=choices,current_time=session['current_time'],s3_visited=session['s3_visited'])
 
 @app.route('/s1', methods=['GET', 'POST'])
 def s1():
@@ -308,6 +306,7 @@ def s3():
     form = ActionForm()
     station = 'Millstone Square'
     choices = get_action_choices(station)
+    session['s3_visited'] = True # Set the flag when s3 is visited
     # Set the choices for the action field
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 

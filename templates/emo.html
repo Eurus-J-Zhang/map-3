@@ -5,16 +5,17 @@
 <p class="t_title">
 
   <br>Please take a moment to reflect on your emotional experience, and rate them accordingly:
+  <br><br>
 
-</p>
+<!-- </p>
 
-<p class = 't_note'>
+<p class = 't_note'> -->
     0 = not experiencing this emotion at all, 
     5= experiencing this emotion moderately, 
     10 = experiencing this emotion intensely
 </p>
 
-
+<div class="form-container">
 <form method="POST">
   {{ form.hidden_tag() }}
   
@@ -81,17 +82,18 @@
   Please explain your emotions. For example: 
   <br>Why do you feel such emotions, which part of the game makes you feel that way? 
   <br>And how do you feel that your emotions have changed along the game?
-    <br>
+    <br><br>
 </p>
   
   <div>
       {{ form.feedback.label }}
       {{ form.feedback(class="feedback-input") }}
   </div>
-<br><br>
+<br>
 
   <input type="submit" value="Submit" class = "continue-btn">
 </form>
+</div>
 
 <br><br><br>
 
