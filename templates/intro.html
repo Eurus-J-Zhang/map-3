@@ -14,14 +14,14 @@
 
 <p class="t_note">
     Welcome to the game introduction!<br>
-    Please use this page to familiarize yourself with the game interface and plan your route in advance, 
-    making it easier when the timer is running in the actual game. <br><br>
-    Your task is to navigate the metro lines from station <b>Giles Town</b> to <b>Condy Vale</b>.<br>
-    You will depart from Giles Town at 8:30, and must reach Condy Vale before 9:00 for an important meeting. 
-    <br>
-    Please calculate your time carefully and avoid unnecessary detours to ensure you arrive in time. 
+    Please use this page to familiarize yourself with the game.
+    <br><br>
+    Your task is to navigate the metro lines from station <b>Giles Town</b> to <b>Condy Vale</b> 
+    to meet a friend, and you don't want to be late.
+
 <br><br>
-    At each station, you will have 90 seconds to make a decision. <br>After selecting your choice and clicking "Continue", 
+    At each station, you will have 90 seconds to make a decision. 
+    <br>After selecting your choice and clicking "Continue", 
     you will be led to the next station. <br>The clock time will increase according to your selection,
     but the 90-seconds decision time will not affect the clock. 
 
@@ -46,7 +46,8 @@
 {% block top_block %}
 
 <p class="t_note">
-    Here shows your goal staion, current station, current clock time, and the time you have left to make an 
+    Here shows your goal staion, current station, current clock time, and the time you have 
+    left to make an 
     action.<br>
     The current station and clock time will change according to your action. <br>
      
@@ -72,35 +73,44 @@ Goal Station:   CONBY VALE
 
 {% block left_block %}
 <p class="t_note">
-    Here is the metro map for you to design your trip. <br>
+    Here is some important guidance for your trip. <br>
     In this game, the time cost for metro transfers is not considered. 
 </p>
 <p class="t_map">    
+    Guide:
+    <br><br>
+    You are meeting your friend at Condy Vale at 9:00. 
+    However, while on the metro, your phone died, leaving you no access to the digital map that you are used to.
+    You remember that Condy Vale is on the Blue Line, 
+    and if you take the metro to the direction of Perivale, you should arrive there without any transfer. 
+    <br><br>
+
+    <!-- Time costs:<br><br>
     It takes 2 mins between each Blue Line station. <br>
     It takes 3 mins between each Red Line station. <br>
-    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br>
+    It takes either 4 or 7 mins between each Yellow Line station. <br>
+    They are shown in your options as "Time costs". -->
 </p>
 
 
 <br>
-<div class="container">
-    <img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Example Image" style="width: 90%;">
-</div>
+
 
 {% endblock %}
 
 {% block right_block %}
 <p class="t_note">
-    Here you can choose your action, it will lead you to the next station, and the clock time will increase accordingly. 
+    Here you can choose your action, it will lead you to the next station, and the clock time will 
+    increase accordingly. 
     <br>The available choices would be in its metro color, while the unavailable ones would be in grey. 
     <br>Your selected action would change from white text to black text.
+</p>
 
-    </p>
-    <div class="form-action">
     <form method="POST">
         {{ form.hidden_tag() }}
         
-        <p>Please select your action and continue:</p>
+    <p class="t_map">Please select your action and continue:</p>       
+    <br> 
         {% for subfield, choice in zip(form.action, choices) %}
             <div class="radio">
                 {{ subfield(disabled=not choice[2], id=subfield.id, class_="colored-radio " + choice[0]) }}
@@ -108,25 +118,15 @@ Goal Station:   CONBY VALE
                     {{ choice[1] | safe }}
                 </label>
             </div>
-        {% endfor %}
-    
-
-
+        {% endfor %}  
     </form>
-    </div>
     <br>
 <p class="t_note">
     If you have understood everything, please click the button "Continue" to access the game. All the notes in the box will disappear there. 
-
-
 </p>
-
 
 <br>
 <button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
 
 {% endblock %}
 
-{% block continue %}
-
-{% endblock %}

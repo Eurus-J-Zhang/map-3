@@ -6,6 +6,9 @@
     var currentStation = "{{ station }}";
     let currentTimeStr = "{{ current_time }}"; // Time passed from Flask, e.g., "08:32"
 
+    // Global variable to track if the second modal has been shown
+    var secondModalShown = false;
+
     // Function to show the modal with a message
     function showModal(message, allowClose = true) {
         var myModal = document.getElementById('myModal');
@@ -32,7 +35,12 @@
         var myModal = document.getElementById('myModal');
         if (myModal) {
             myModal.style.display = "none";
-            // startCountdown(); // Start the timer after closing the modal
+        }
+
+        // Logic to show another modal based on conditions
+        if (currentStation === 'Millstone Square' && !secondModalShown) {
+            secondModalShown = true; // Ensure this modal is shown only once
+            showModal('However, now you meet a local guide, he askes where you are going to and gives you a detailed guide.');
         }
     }
 
@@ -53,10 +61,10 @@
             // If the countdown reaches zero, redirect to the fail page
             if (countdown < 0) {
                 clearInterval(countdownInterval);
-                showModal(`You have run out of time to make an action. You will be directed to the result page in 5 seconds`,false);
+                showModal(`You have run out of time to make an action. You will be directed to the result page in 5 seconds`, false);
                 setTimeout(function() {
-                window.location.href = "/wrong"; // Redirect to the wrong.html page
-            }, 5000);
+                    window.location.href = "/wrong"; // Redirect to the wrong.html page
+                }, 5000);
             }
         }, 1000); // Update every second
     }
@@ -85,8 +93,7 @@
         if (currentStation === 'Millstone Square') {
             showModal(`However, the metro stops at Millstone Square unexpectedly, and could not continue to the 
             direction of Perivale. <br>
-            It is due to ongoing construction at Bagton Mere, with no metros able to pass through.  <br>
-            Please design your trip accordingly.`);
+            It is due to ongoing construction at the next station Bagton Mere, with no metros able to pass through.  <br>`);
         }
 
         // Show the modal with no close option if the current time is >= 09:00
@@ -100,7 +107,6 @@
         }
     });
 </script>
-
 
 {% endblock %}
 
@@ -128,23 +134,44 @@ Goal station:   CONBY VALE
 
 {% if session.get('s3_visited') %}
 <p class="t_map">    
+    Guide:
+    <br><br>
+    1. Take Red Line to the direction of Fayre End.<br>
+    2. When you arrive at Grunham Holt, change to Yellow line to the direction of Cockfosters.<br>
+    3. When you arrive at Wofford Cross, change to Blue Line to the direction of Windrush Park.<br>
+    4. Then you will arrive at Conby Vale. 
+    <br><br>
+    <!-- Time costs:<br><br>
     It takes 2 mins between each Blue Line station. <br>
     It takes 3 mins between each Red Line station. <br>
-    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br>
-    <span style="color: red;">Station Bagton Mere is not accessible.</span>
+    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br><br> -->
+    <span style="color: red;">Warning: </span><br>
+
+    <span style="color: red;">The station Station Bagton on Blue Line is not accessible.</span>
+
+
 </p>
-    <img src="{{ url_for('static', filename='img/map_with_error.jpg') }}" alt="New Map" style="width: 100%;">
 {% else %}
 <p class="t_map">    
+    Guide:
+    <br><br>
+    You are meeting your friend at Condy Vale at 9:00. 
+    However, while on the metro, your phone died, leaving you no access to the digital map that you are used to.
+    You remember that Condy Vale is on the Blue Line, 
+    and if you take the metro to the direction of Perivale, you should arrive there without any transfer. 
+    <br><br>
+
+    <!-- Time costs:<br><br>
     It takes 2 mins between each Blue Line station. <br>
     It takes 3 mins between each Red Line station. <br>
-    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br>
+    It takes either 4 or 7 mins between each Yellow Line station. <br>
+    They are shown in your options as "Time costs". -->
 </p>
-    <img src="{{ url_for('static', filename='img/map.jpg') }}" alt="Original Map" style="width: 100%;">
 {% endif %}
 {% endblock %}
 
 {% block right_block %}
+
 <form method="POST">
     {{ form.hidden_tag() }}
     <br>
@@ -162,4 +189,5 @@ Goal station:   CONBY VALE
     <br><br>
     <p>{{ form.submit(class='continue-btn') }}</p>
 </form>
+
 {% endblock %}
