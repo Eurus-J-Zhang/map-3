@@ -5,13 +5,14 @@ import os
 import pymysql
 from models import db, Data
 from datetime import datetime, timedelta
+import json
 
 pymysql.install_as_MySQLdb()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('JAWSDB_URL')
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('JAWSDB_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
     app.config['SECRET_KEY'] = "iloveeurus"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -22,13 +23,73 @@ def create_app():
 
 app = create_app()
 
-def handle_form_submission(form, session_key, next_page):
-    if form.validate_on_submit():
-        data = form.data
-        data.pop('csrf_token', None)
-        session[session_key] = data
-        return redirect(next_page)
-    return None
+# Centralized action definitions
+actions = {
+    'a': 'Take Blue Line to the direction of Perivale',
+    'b': 'Take Blue Line to the direction of Windrush Park',
+    'c': 'Take Red Line to the direction of Cockfosters',
+    'd': 'Take Red Line to the direction of Fayre End',
+    'e': 'Take Yellow Line to the direction of Cockfosters',
+    'f': 'Take Yellow Line to the direction of Giles Town',
+    'g': "Get out of the metro"
+}
+
+# Station-specific configurations
+station_config = {
+    'Giles Town': {'enabled': {'a': '2', 'b': '2', 'e': '4'}, 'disabled': ['c', 'd', 'f']},
+    'Lefting Parkway': {'enabled': {'a': '2', 'b': '2'}, 'disabled': ['c', 'd', 'e', 'f']},
+    'Millstone Square': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f']},
+    'Donningpool North': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a', 'b', 'e', 'f']},
+    'Cockfosters': {'enabled': {'d': '3', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'e']},
+    'Oldgate': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
+    'Thornbury Fields': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
+    'Chigwell': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a','b', 'e', 'f']},
+    'Grunham Holt': {'enabled': {'c': '3', 'd': '3', 'e': '4', 'f': '7'}, 'disabled': ['a', 'b']},
+    'Fayre End': {'enabled': {'c': '3'}, 'disabled': ['a', 'b', 'd', 'e', 'f']},
+    'Tallow Hill': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
+    'Mudchute': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
+    'Epping': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
+    'Wofford Cross': {'enabled': {'a': '2', 'b': '2', 'e': '7', 'f': '4'}, 'disabled': ['c', 'd']},
+    'Conby Vale': {'enabled': {'g': ''}, 'disabled': ['a', 'b', 'c', 'd', 'e', 'f']},
+    'Conby Down': {'enabled': {'e': '7', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
+    'Windrush Park': {'enabled': {'a': '2'}, 'disabled': ['b', 'c', 'd', 'e', 'f']}
+}
+
+def get_action_choices(station):
+    """Return action choices based on the station, preserving the order."""
+    config = station_config.get(station, {})
+    enabled_actions = config.get('enabled', {})
+    disabled_actions = set(config.get('disabled', []))
+    
+    choices = []
+
+    # Iterate over all possible actions in the predefined order
+    for action in actions.keys():
+        if action in enabled_actions:
+            time = enabled_actions[action]
+            time_str = f'<br>Time costs: {time} mins' if time else ''
+            choice = (action, actions[action] + time_str, True)
+        elif action in disabled_actions:
+            choice = (action, actions[action], False)
+        else:
+            # Handle actions that are neither explicitly enabled nor disabled
+            choice = (action, actions[action], False)
+        
+        choices.append(choice)
+
+    return choices
+
+
+    return choices
+
+def process_action(time_cost, redirect_target):
+    """Process the action by updating time, and redirecting."""
+    current_time_str = session.get('current_time')
+    current_time = datetime.strptime(current_time_str, '%H:%M')
+    current_time += timedelta(minutes=time_cost)
+    session['current_time'] = current_time.strftime('%H:%M')
+    return redirect(url_for(redirect_target))
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -38,237 +99,62 @@ def index():
         data.pop('csrf_token', None)
         data.pop('submit', None)
         session['index_data'] = data
-        session['counter'] = 0
+        # session['counter'] = 0
         return redirect(url_for('intro'))
     return render_template('index.html',form=form)
 
-
 @app.route('/emo', methods=['GET', 'POST'])
 def emo():
-    
     form = EmotionForm()
 
-    result = handle_form_submission(form, 'emo_data', 'end')
-    if result:
-        index_data = session.get('index_data')
-        # final_choice = session.get('final_choice')
-        emo_data = session.get('emo_data')
-        combined_data = {**index_data, **emo_data}
-        # combined_data = {**index_data, 'final_choice': final_choice, **emo_data}
+    if form.validate_on_submit():
+        # Get form data and remove CSRF token
+        emo_data = form.data
+        emo_data.pop('csrf_token', None)
+        
+        # Store form data in session
+        session['emo_data'] = emo_data
+        
+        # Retrieve necessary session data
+        index_data = session.get('index_data', {})
+        station_track = session.get('station_track', [])
+        station_track_json = json.dumps(station_track)
+        result = session.get('result')
+
+        # Combine all data
+        combined_data = {**index_data, 'station_track': station_track_json,'result': result, **emo_data}
+        
+        # Save combined data to the database
         data = Data(**combined_data)
         db.session.add(data)
         db.session.commit()
-        return result
-    return render_template('emo.html',form=form)
+        
+        # Redirect to the next page
+        return redirect('end')
 
-
-
-
-action_a = 'Take Blue Line to the direction of Perivale'
-action_b = 'Take Blue Line to the direction of Windrush Park'
-action_c = 'Take Red Line to the direction of Cockfosters '
-action_d = 'Take Red Line to the direction of Fayre End '
-action_e = 'Take Yellow Line to the direction of Cockfosters'
-action_f = 'Take Yellow Line to the direction of Giles Town '
-action_g = "Get out of the metro" 
-time_2 = '<br>Time costs: 2 mins'
-time_3 = '<br>Time costs: 3 mins'
-time_4 = '<br>Time costs: 4 mins'
-time_7 = '<br>Time costs: 7 mins'
-
-
-def get_action_choices(station):
-    """Define the action choices and their availability based on the station."""
-    if station == 'Giles Town':
-        return [
-            ('a', action_a+time_2, True),
-            ('b', action_b+time_2, True),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_4, True),
-            ('f', action_f, False),
-        ]
-    elif station == 'Lefting Parkway':
-        return [
-            ('a', action_a+time_2, True),
-            ('b', action_b+time_2, True),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e, False),
-            ('f', action_f, False),
-            ]
-    elif station == 'Millstone Square':
-        return [
-            ('a', action_a, False),
-            ('b', action_b+time_2, True),
-            ('c', action_c+time_3, True),
-            ('d', action_d+time_3, True),
-            ('e', action_e, False),
-            ('f', action_f, False),
-        ]
-    elif station == 'Donningpool North':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c+time_3, True),
-            ('d', action_d+time_3, True),
-            ('e', action_e, False),
-            ('f', action_f, False),
-        ]
-    elif station == 'Cockfosters':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d+time_3, True),
-            ('e', action_e,False ),
-            ('f', action_f+time_7, True),
-        ]
-    elif station == 'Oldgate':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_7, True),
-            ('f', action_f+time_7, True),
-        ]
-    elif station == 'Thornbury Fields':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_7, True),
-            ('f', action_f+time_7, True),
-        ]
-    elif station == 'Chigwell':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c+time_3, True),
-            ('d', action_d+time_3, True),
-            ('e', action_e, False),
-            ('f', action_f, False),
-        ]
-    elif station == 'Grunham Holt':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c+time_3, True),
-            ('d', action_d+time_3, True),
-            ('e', action_e+time_4, True),
-            ('f', action_f+time_7, True),
-        ]
-    elif station == 'Fayre End':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c+time_3, True),
-            ('d', action_d, False),
-            ('e', action_e, False),
-            ('f', action_f, False),
-        ]
-    elif station == 'Tallow Hill':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_4, True),
-            ('f', action_f+time_4, True),
-        ]
-    elif station == 'Mudchute':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_4, True),
-            ('f', action_f+time_4, True),
-        ]
-    elif station == 'Epping':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_4, True),
-            ('f', action_f+time_4, True),
-        ]
-    elif station == 'Wofford Cross':
-        return [
-            ('a', action_a+time_2, True),
-            ('b', action_b+time_2, True),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_7, True),
-            ('f', action_f+time_4, True),
-        ]
-    elif station == 'Conby Vale':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e, False),
-            ('f', action_f, False),
-            ('g', action_g, True),
-        ]
-    elif station == 'Conby Down':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_7, True),
-            ('f', action_f+time_4, True),
-        ]
-    elif station == 'Thornbury Fields':
-        return [
-            ('a', action_a, False),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e+time_7, True),
-            ('f', action_f+time_7, True),
-        ]
-    elif station == 'Windrush Park':
-        return [
-            ('a', action_a+time_2, True),
-            ('b', action_b, False),
-            ('c', action_c, False),
-            ('d', action_d, False),
-            ('e', action_e, False),
-            ('f', action_f, False),
-        ]
-
-
-def process_action(time_cost, redirect_target):
-    """Process the action by updating time, score, and redirecting."""
-    current_time_str = session.get('current_time')
-    current_time = datetime.strptime(current_time_str, '%H:%M')
-    current_time += timedelta(minutes=time_cost)
-    session['current_time'] = current_time.strftime('%H:%M')
-    return redirect(url_for(redirect_target))
+    return render_template('emo.html', form=form)
 
 # intro
 @app.route('/intro')
 def intro():
-    # session['score'] = 30
     session['current_time'] = '08:30'
     station = 'Giles Town'
     session['s3_visited'] = False 
+    session['result']=None
+    session['station_track'] = [] # Initialize as an empty list
     form = ActionForm()
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
     
     return render_template('intro.html',form=form,zip=zip,station=station, choices=choices,current_time=session['current_time'],s3_visited=session['s3_visited'])
 
+
 @app.route('/s1', methods=['GET', 'POST'])
 def s1():
     form = ActionForm()
     station = 'Giles Town'
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
@@ -281,24 +167,32 @@ def s1():
         elif action == 'e':
             return process_action(4, 's19')
 
-    return render_template('map.html', form=form ,current_time=session['current_time'], zip=zip, station=station, choices=choices)
+    return render_template('map.html', form=form ,current_time=session['current_time'], 
+                           zip=zip, station=station, choices=choices)
 
 # s2
 @app.route('/s2', methods=['GET', 'POST'])
 def s2():
     form = ActionForm()
     station = 'Lefting Parkway'
+
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
+         
         if action == 'a':
             return process_action(2, 's3')
+        # debug
         elif action == 'b':
             return process_action(2, 's1')
 
-    return render_template('map.html', form=form , current_time=session['current_time'],zip=zip, station=station, choices = choices)
+    return render_template('map.html', form=form , current_time=session['current_time'],
+                           zip=zip, station=station, choices = choices)
 
 # s3
 @app.route('/s3', methods=['GET', 'POST'])
@@ -310,7 +204,11 @@ def s3():
     # Set the choices for the action field
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    
+
     if form.validate_on_submit():
+        session['station_track'].append([station,current_time])  # Append station to the list 
         action = form.action.data
         if action == 'b':
             return process_action(2, 's2')
@@ -330,6 +228,9 @@ def s7():
     # Set the choices for the action field
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'c':
@@ -348,6 +249,9 @@ def s13():
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'd':
@@ -363,6 +267,9 @@ def s16():
     station = 'Oldgate'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
 
     if form.validate_on_submit():
         action = form.action.data
@@ -381,6 +288,9 @@ def s15():
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
@@ -397,6 +307,9 @@ def s6():
     station = 'Chigwell'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
 
     if form.validate_on_submit():
         action = form.action.data
@@ -415,6 +328,9 @@ def s8():
     station = 'Grunham Holt'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
 
     if form.validate_on_submit():
         action = form.action.data
@@ -438,6 +354,9 @@ def s10():
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'c':
@@ -453,6 +372,9 @@ def s11():
     station = 'Tallow Hill'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
 
     if form.validate_on_submit():
         action = form.action.data
@@ -470,6 +392,9 @@ def s12():
     station = 'Mudchute'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
 
     if form.validate_on_submit():
         action = form.action.data
@@ -490,6 +415,9 @@ def s17():
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
@@ -506,10 +434,13 @@ def s4():
     station = 'Conby Vale'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+    
     if form.validate_on_submit():
         action = form.action.data
         if action == 'g':
-            return redirect(url_for('emo'))        
+            return redirect(url_for('correct'))        
     return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
@@ -520,6 +451,10 @@ def s5():
     station = 'Wofford Cross'
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'a':
@@ -541,6 +476,9 @@ def s18():
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'a':
@@ -556,6 +494,9 @@ def s19():
     choices = get_action_choices(station)
     form.action.choices = [(value, label) for value, label, is_disabled in choices]
 
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
     if form.validate_on_submit():
         action = form.action.data
         if action == 'e':
@@ -569,11 +510,13 @@ def s19():
 # r_correct
 @app.route('/correct')
 def correct():
+    session['result']='success'  # record the result
     return render_template('correct.html')
 
 # r_wrong
 @app.route('/wrong')
 def wrong():
+    session['result']='fail'  
     return render_template('wrong.html')
 
 # end page

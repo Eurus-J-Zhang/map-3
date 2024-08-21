@@ -38,9 +38,6 @@
     margin-right: 15%;
 }
 
-form {
-    line-height: 200%;
-}
 
 
 form p {
@@ -283,10 +280,7 @@ input:not([disabled]) + .g{
     width: 80%; /* Adjust the width as necessary */
     margin: 0 auto;
     text-align: center;
-}
-
-.form-container form {
-    width: 100%;
+    line-height: 200%;
 }
 
 table {

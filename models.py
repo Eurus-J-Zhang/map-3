@@ -8,8 +8,6 @@ class Data(db.Model):
     gender=db.Column(db.String(1))
     age = db.Column(db.Integer)
 
-    final_choice = db.Column(db.String(1))
-
     emo1_happiness = db.Column(db.Integer)
     emo1_joy = db.Column(db.Integer)
     emo1_despair = db.Column(db.Integer)
@@ -19,3 +17,5 @@ class Data(db.Model):
     # emo1_confusion = db.Column(db.Integer)
 
     feedback = db.Column(db.String(1000))
+    station_track = db.Column(db.String, nullable=True)
+    result = db.Column(db.String, nullable=True)
