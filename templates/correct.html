@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block script %}
+<script>    
+    function fn1(){
+        window.location="emo";
+    }
+
+    function preventBack() { window.history.forward(); }  
+    setTimeout("preventBack()", 0);  
+    window.onunload = function () { null }; 
+
+</script>
+{% endblock %}
+
+{% block top_block %}
+
+<p class="t_title">
+You made the right choice and you would be in time for you meeting. 
+<br>
+Congrats!
+<br><br>
+
+<!-- <img src="{{ url_for('static', filename='img/ring.jpg') }}" alt="Example Image"  style="width: 100%;"> -->
+</p>
+
+{% endblock %}
+
+
+{% block right_block %}
+<button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
+{% endblock %}

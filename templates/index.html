@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+
+{% block top_block %}
+<p class="t_content">
+  Hello, welcome to the experiment! <br>
+
+  <br>
+  In this game, you will encounter a life scenario, and please get involved as much as you can. <br>
+  The next page would introduce you how to play this game. There is no time limit on the introduction page.
+  <br>Please spend some time there and get yourself familiar with the game as much as you can, as there would be time limitations when you start the game. 
+  <br><br>
+  There would be a questionaire after you've completed the game. Please fill it in and submit it. <br>After that, you will get a code for 
+  Prolific, which you can use in Prolific to get your compensation.  <br>
+  All the data collected here would be for scientific use. 
+  
+ 
+   <br><br><br>
+
+  If you agree to participate in this experiment, please enter your prolific ID and demographic information to start. 
+  <br>The whole experiment will take around 15 minutes in total. <br><br>
+  Thanks for your participation!
+</p>
+
+<div class="form-container">
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <br>
+  <table class="my-table">
+      <tr>
+          <td><label for="id">Prolific ID:</label></td>
+          <td>{{ form.id(id='id', class = 'text-input', style='font-size: 16px;') }}</td>
+      </tr>
+      <tr>
+          <td><label>Gender:</label></td>
+          <td>        {% for subfield in form.gender %}
+            <label>{{ subfield }} {{ subfield.label }}</label>
+            {% endfor %}</td>
+      </tr>
+      <tr>
+        <td><label for="age">Age:</label></td>
+        <td>{{ form.age(id='age', class = 'text-input',style='font-size: 16px;') }}</td>
+    </tr>
+  </table>
+  <br>
+
+
+  <p>{{ form.submit(class='continue-btn') }}</p>
+</form>
+</div>
+
+{% endblock %}
