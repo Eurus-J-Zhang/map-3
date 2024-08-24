@@ -40,7 +40,7 @@
         // Logic to show another modal based on conditions
         if (currentStation === 'Millstone Square' && !secondModalShown) {
             secondModalShown = true; // Ensure this modal is shown only once
-            showModal('However, now you meet a local guide, he askes where you are going to and gives you a detailed guide.');
+            showModal('But a local guide comes to help, he askes about your destination and gives you a detailed guide.');
         }
     }
 
@@ -91,9 +91,7 @@
 
         // Show the modal if the station is 'Millstone Square'
         if (currentStation === 'Millstone Square') {
-            showModal(`However, the metro stops at Millstone Square unexpectedly, and could not continue to the 
-            direction of Perivale. <br>
-            It is due to ongoing construction at the next station Bagton Mere, with no metros able to pass through.  <br>`);
+            showModal(`However, the metro stops here unexpectedly. <br>`);
         }
 
         // Show the modal with no close option if the current time is >= 09:00
@@ -133,6 +131,15 @@ Goal station:   CONBY VALE
 
 
 {% if session.get('s3_visited') %}
+<br>
+<p class="t_warning">
+    Warning:<br>
+    Due to ongoing construction at Bagton Mere, the station is not accessible and no metros will pass through it.  <br>
+    Your task remains the same.
+    <!-- Please design your trip accordingly.<br> -->
+</p>
+<br>
+
 <p class="t_map">    
     Guide:
     <br><br>
@@ -145,20 +152,19 @@ Goal station:   CONBY VALE
     It takes 2 mins between each Blue Line station. <br>
     It takes 3 mins between each Red Line station. <br>
     It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br><br> -->
-    <span style="color: red;">Warning: </span><br>
 
-    <span style="color: red;">The station Station Bagton on Blue Line is not accessible.</span>
+
 
 
 </p>
 {% else %}
 <p class="t_map">    
-    Guide:
+    <!-- Intro: -->
     <br><br>
-    You are meeting your friend at Condy Vale at 9:00. 
+    You are going to your office at Condy Vale, where you will have an important meeting at 9:00. 
     However, while on the metro, your phone died, leaving you no access to the digital map that you are used to.
     You remember that Condy Vale is on the Blue Line, 
-    and if you take the metro to the direction of Perivale, you should arrive there without any transfer. 
+    and if you take the metro to the direction of Perivale, you should arrive there in several stops without any transfer. 
     <br><br>
 
     <!-- Time costs:<br><br>

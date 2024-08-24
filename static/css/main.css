@@ -25,6 +25,19 @@
     margin-right: 15%;
 }
 
+.t_warning{
+    font-size: 18px;
+    font-family: "Georgia", sans-serif;
+    color:red;
+    margin-left: 5%;
+    margin-right: 5%;
+    border: 2px dashed red; 
+    padding: 5px; 
+    padding-left: 5%;
+    padding-right: 5%;
+    border-radius: 10px;
+}
+
 form p {
     margin-top: 0px; /* Adjust this value as needed */
     margin-bottom: 0px; /* This controls the space below the <p> tag */
@@ -35,25 +48,19 @@ form p {
     border: none;
     color: white;
     border-radius: 12px;
-    width: 100px;
+    width: 200px;
     padding: 10px;
     text-align: center;
     font-size: 18px;
     cursor: pointer;
-    float: right;
-    /* margin-top: 20px;  */
-    margin-right: 5%; 
+    display: block;
+    margin:  auto;
 }
 
 .my-table {
     /* padding-right: 20px; */
     width: 40%;
 
-}
-
-.radio-button {
-    margin-left: 8px;
-    margin-right: 8px;  /* adjust as needed */
 }
 
 .text-input{
@@ -193,7 +200,7 @@ form p {
     margin-top: 10px;
     /* margin-bottom: 10px; */
     margin-left: 5%;
-    margin-right: 5%;
+    /* margin-right: 5%; */
 
 }
 
@@ -232,7 +239,7 @@ form p {
     border: 2px solid;
     border-radius: 5px;
     cursor: pointer;
-    width: 90%;
+    width: 80%;
 }
 
 /* Color-specific styles */

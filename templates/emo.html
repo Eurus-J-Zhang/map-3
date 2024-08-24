@@ -34,46 +34,50 @@
           <th>9</th>
           <th>10</th>
       </tr>
+      
       <tr>
-
-          <td>{{ form.emo_happiness.label }}</td>
-          {% for subfield in form.emo_happiness %}
-          <td><div class="radio-button">{{ subfield }}</div></td>
-          {% endfor %}
+        <td>{{ form.emo_competence.label }}</td>
+        {% for subfield in form.emo_competence %}
+        <td><div class="radio-button">{{ subfield }}</div></td>
+        {% endfor %}
       </tr>
       <tr>
         <td>{{ form.emo_joy.label }}</td>
         {% for subfield in form.emo_joy %}
         <td><div class="radio-button">{{ subfield }}</div></td>
         {% endfor %}
-    </tr>
-    <tr>
-        <td>{{ form.emo_despair.label }}</td>
-        {% for subfield in form.emo_despair %}
+      </tr>
+      <tr>
+        <td>{{ form.emo_pride.label }}</td>
+        {% for subfield in form.emo_pride %}
         <td><div class="radio-button">{{ subfield }}</div></td>
         {% endfor %}
-    </tr>
+      </tr>
       <tr>
-          <td>{{ form.emo_sadness.label }}</td>
-          {% for subfield in form.emo_sadness %}
+        <td>{{ form.emo_boredom.label }}</td>
+        {% for subfield in form.emo_boredom %}
+        <td><div class="radio-button">{{ subfield }}</div></td>
+        {% endfor %}
+      </tr>
+      <tr>
+          <td>{{ form.emo_irritation.label }}</td>
+          {% for subfield in form.emo_irritation %}
           <td><div class="radio-button">{{ subfield }}</div></td>
           {% endfor %}
       </tr>
       <tr>
-        <td>{{ form.emo_irritation.label }}</td>
-        {% for subfield in form.emo_irritation %}
+        <td>{{ form.emo_anxiety.label }}</td>
+        {% for subfield in form.emo_anxiety %}
         <td><div class="radio-button">{{ subfield }}</div></td>
         {% endfor %}
       </tr>
       <tr>
-        <td>{{ form.emo_rage.label }}</td>
-        {% for subfield in form.emo_rage %}
+        <td>{{ form.emo_shame.label }}</td>
+        {% for subfield in form.emo_shame %}
         <td><div class="radio-button">{{ subfield }}</div></td>
         {% endfor %}
     </tr>
-    <tr>
 
-  </tr>
 
   </table>
 <br>

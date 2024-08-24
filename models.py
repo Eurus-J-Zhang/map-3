@@ -8,12 +8,13 @@ class Data(db.Model):
     gender=db.Column(db.String(1))
     age = db.Column(db.Integer)
 
-    emo_happiness = db.Column(db.Integer)
+    emo_competence = db.Column(db.Integer)
     emo_joy = db.Column(db.Integer)
-    emo_despair = db.Column(db.Integer)
-    emo_sadness = db.Column(db.Integer)
+    emo_pride = db.Column(db.Integer)
+    emo_boredom = db.Column(db.Integer)
     emo_irritation = db.Column(db.Integer)
-    emo_rage = db.Column(db.Integer)
+    emo_anxiety = db.Column(db.Integer)
+    emo_shame = db.Column(db.Integer)
 
 
     feedback = db.Column(db.String(1000))

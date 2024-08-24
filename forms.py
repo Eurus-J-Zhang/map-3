@@ -14,13 +14,13 @@ eleven_point_scale = [(str(i), f'Opt{i}') for i in range(11)]
 
 # Here is the first emotion check
 class EmotionForm(FlaskForm):
-    emo_happiness = RadioField('Happiness', choices=eleven_point_scale, validators=[DataRequired()])
+    emo_competence = RadioField('Competence', choices=eleven_point_scale, validators=[DataRequired()])
     emo_joy = RadioField('Joy', choices=eleven_point_scale, validators=[DataRequired()])
-    emo_despair = RadioField('Despair', choices=eleven_point_scale, validators=[DataRequired()])
-    emo_sadness = RadioField('Sadness', choices=eleven_point_scale, validators=[DataRequired()])
+    emo_pride = RadioField('Pride', choices=eleven_point_scale, validators=[DataRequired()])
+    emo_boredom = RadioField('Boredom', choices=eleven_point_scale, validators=[DataRequired()])
     emo_irritation = RadioField('Irritation', choices=eleven_point_scale, validators=[DataRequired()]) 
-    emo_rage = RadioField('Rage', choices=eleven_point_scale, validators=[DataRequired()])  
-    # emo_confusion = RadioField('Confusion', choices=eleven_point_scale, validators=[DataRequired()])  
+    emo_anxiety = RadioField('Anxiety', choices=eleven_point_scale, validators=[DataRequired()])  
+    emo_shame = RadioField('Shame', choices=eleven_point_scale, validators=[DataRequired()])   
     
     feedback = StringField('',validators=[DataRequired()],widget=TextArea())
 

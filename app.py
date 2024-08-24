@@ -11,8 +11,8 @@ pymysql.install_as_MySQLdb()
 
 def create_app():
     app = Flask(__name__)
-    # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('JAWSDB_URL')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('JAWSDB_URL')
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
     app.config['SECRET_KEY'] = "iloveeurus"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -38,18 +38,18 @@ actions = {
 station_config = {
     'Giles Town': {'enabled': {'a': '2', 'b': '2', 'e': '4'}, 'disabled': ['c', 'd', 'f']},
     'Lefting Parkway': {'enabled': {'a': '2', 'b': '2'}, 'disabled': ['c', 'd', 'e', 'f']},
-    'Millstone Square': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f']},
+    'Millstone Square': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f'], 'guided': ['d']},
     'Donningpool North': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a', 'b', 'e', 'f']},
     'Cockfosters': {'enabled': {'d': '3', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'e']},
     'Oldgate': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
     'Thornbury Fields': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
-    'Chigwell': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a','b', 'e', 'f']},
-    'Grunham Holt': {'enabled': {'c': '3', 'd': '3', 'e': '4', 'f': '7'}, 'disabled': ['a', 'b']},
+    'Chigwell': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a','b', 'e', 'f'], 'guided': ['d']},
+    'Grunham Holt': {'enabled': {'c': '3', 'd': '3', 'e': '4', 'f': '7'}, 'disabled': ['a', 'b'], 'guided': ['e']},
     'Fayre End': {'enabled': {'c': '3'}, 'disabled': ['a', 'b', 'd', 'e', 'f']},
-    'Tallow Hill': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
-    'Mudchute': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
-    'Epping': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
-    'Wofford Cross': {'enabled': {'a': '2', 'b': '2', 'e': '7', 'f': '4'}, 'disabled': ['c', 'd']},
+    'Tallow Hill': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd'], 'guided': ['e']},
+    'Mudchute': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd'], 'guided': ['e']},
+    'Epping': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd'], 'guided': ['e']},
+    'Wofford Cross': {'enabled': {'a': '2', 'b': '2', 'e': '7', 'f': '4'}, 'disabled': ['c', 'd'], 'guided': ['b']},
     'Conby Vale': {'enabled': {'g': ''}, 'disabled': ['a', 'b', 'c', 'd', 'e', 'f']},
     'Conby Down': {'enabled': {'e': '7', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
     'Windrush Park': {'enabled': {'a': '2'}, 'disabled': ['b', 'c', 'd', 'e', 'f']}
@@ -58,17 +58,21 @@ station_config = {
 def get_action_choices(station):
     """Return action choices based on the station, preserving the order."""
     config = station_config.get(station, {})
-    enabled_actions = config.get('enabled', {})
+    enabled_actions = config.get('enabled', {}) 
     disabled_actions = set(config.get('disabled', []))
+    guided_actions = set(config.get('guided', []))
     
     choices = []
 
     # Iterate over all possible actions in the predefined order
     for action in actions.keys():
-        if action in enabled_actions:
+        guided_str = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[As guided]' if action in guided_actions else ''
+        if action == 'g' and station != 'Conby Vale':
+            continue  # Skip 'g' if the station is not 'Conby Vale'
+        elif action in enabled_actions:
             time = enabled_actions[action]
             time_str = f'<br>Time costs: {time} mins' if time else ''
-            choice = (action, actions[action] + time_str, True)
+            choice = (action, actions[action] + guided_str + time_str , True)
         elif action in disabled_actions:
             choice = (action, actions[action], False)
         else:
@@ -76,8 +80,8 @@ def get_action_choices(station):
             choice = (action, actions[action], False)
         
         choices.append(choice)
-
     return choices
+
 
 
 def process_action(time_cost, redirect_target):

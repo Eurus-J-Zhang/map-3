@@ -13,30 +13,14 @@
 {% block headline %}
 
 <p class="t_note">
-    Welcome to the game introduction!<br>
-    Please use this page to familiarize yourself with the game.
-    <br><br>
-    Your task is to navigate the metro lines from station <b>Giles Town</b> to <b>Condy Vale</b> 
-    to meet a friend, and you don't want to be late.
 
+    Your task is to navigate the metro lines from the starting station at 8:30, and to reach your destination before 9:00.<br>
+    Please plan your route accordingly and avoid unnecessary detours to ensure you arrive in time. 
 <br><br>
-    At each station, you will have 90 seconds to make a decision. 
-    <br>After selecting your choice and clicking "Continue", 
-    you will be led to the next station. <br>The clock time will increase according to your selection,
-    but the 90-seconds decision time will not affect the clock. 
-
+    At each station, you will have 90 seconds to choose an action, which will lead you to the next station. <br>
+    While the clock time will increase based on your choices, the 90-seconds decision time does not affect the clock. 
     <br><br>
-    There might be situations happening in the process, stay alert, it is part of the game. 
-
-    <br><br>
-    How to win this game?
-    <br>
-    &nbsp;&nbsp;&nbsp;Arrive at Condy Vale before 9:00.
-
-    <br><br>
-    How might you lose this game?<br>
-    &nbsp;&nbsp;&nbsp;Failing to arrive at Condy Vale by 9:00. <br>
-    &nbsp;&nbsp;&nbsp;Taking more than 90 seconds to make a decision at any station.
+    To successfully complete the task, you must arrive your destination before 9:00, and make decisions within the allotted 90 seconds at any station. 
 
 </p>
 
@@ -46,17 +30,14 @@
 {% block top_block %}
 
 <p class="t_note">
-    Here shows your goal staion, current station, current clock time, and the time you have 
-    left to make an 
-    action.<br>
-    The current station and clock time will change according to your action. <br>
-     
+    This section will display your destination, current station, clock time, and the remaining time to make a decision. <br>
+    The current station and clock time will update based on your action choice. <br>    
 </p>
-Goal Station:   CONBY VALE
+Goal Station:   ***
 <br><br>
 
 <div>
-    Current station: <span style="border: 1px solid #000; padding: 5px; padding-left: 3%;padding-right: 3%;border-radius: 3px;">{{ station | upper }}</span>
+    Current station: <span style="border: 1px solid #000; padding: 5px; padding-left: 3%;padding-right: 3%;border-radius: 3px;">***</span>
 </div>
 <br>
 <div>
@@ -72,18 +53,24 @@ Goal Station:   CONBY VALE
 
 
 {% block left_block %}
+<br><br>
 <p class="t_note">
-    Here is some important guidance for your trip. <br>
-    In this game, the time cost for metro transfers is not considered. 
+    <br>
+    <br>
+    Here, you will have some guidance for your trip. <br>
+    <!-- In this game, the time cost for metro transfers is not considered.  -->
+    <br><br>
 </p>
 <p class="t_map">    
-    Guide:
+    <br>
+    ***
+    <!-- Guide:
     <br><br>
     You are meeting your friend at Condy Vale at 9:00. 
     However, while on the metro, your phone died, leaving you no access to the digital map that you are used to.
     You remember that Condy Vale is on the Blue Line, 
     and if you take the metro to the direction of Perivale, you should arrive there without any transfer. 
-    <br><br>
+    <br><br> -->
 
     <!-- Time costs:<br><br>
     It takes 2 mins between each Blue Line station. <br>
@@ -100,16 +87,15 @@ Goal Station:   CONBY VALE
 
 {% block right_block %}
 <p class="t_note">
-    Here you can choose your action, it will lead you to the next station, and the clock time will 
-    increase accordingly. 
-    <br>The available choices would be in its metro color, while the unavailable ones would be in grey. 
-    <br>Your selected action would change from white text to black text.
+    Here, you can choose your action, which will take you to the next station, with the clock time adjusting accordingly. <br>
+    Available choices will be shown in their metro colors, while unavailable options will be greyed out. <br>
+    Once selected, your choice will change from white text to black text.
 </p>
 
     <form method="POST">
         {{ form.hidden_tag() }}
         
-    <p class="t_map">Please select your action and continue:</p>       
+    <!-- <p class="t_map">Please select your action and continue:</p>        -->
     <br> 
         {% for subfield, choice in zip(form.action, choices) %}
             <div class="radio">
