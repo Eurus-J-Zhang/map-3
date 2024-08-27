@@ -38,7 +38,8 @@ actions = {
 station_config = {
     'Giles Town': {'enabled': {'a': '2', 'b': '2', 'e': '4'}, 'disabled': ['c', 'd', 'f']},
     'Lefting Parkway': {'enabled': {'a': '2', 'b': '2'}, 'disabled': ['c', 'd', 'e', 'f']},
-    'Millstone Square': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f'], 'guided': ['d']},
+    'Millstone Square': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f']},
+    'Millstone Square ': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f'], 'guided': ['d']},
     'Donningpool North': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a', 'b', 'e', 'f']},
     'Cockfosters': {'enabled': {'d': '3', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'e']},
     'Oldgate': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
@@ -142,6 +143,7 @@ def intro():
     session['current_time'] = '08:30'
     station = 'Giles Town'
     session['s3_visited'] = False 
+    session['s3_2_visited'] = False 
     session['result']=None
     session['station_track'] = [] # Initialize as an empty list
     form = ActionForm()
@@ -213,6 +215,31 @@ def s3():
         session['station_track'].append([station,current_time])  # Append station to the list 
         action = form.action.data
         if action == 'b':
+            return process_action(0, 's3_2')
+        elif action == 'c':
+            return process_action(0, 's3_2')
+        elif action == 'd':
+            return process_action(0, 's3_2')
+
+    return render_template('map.html', form=form , current_time=session['current_time'], zip=zip, station=station, choices = choices)
+
+# s3
+@app.route('/s3_2', methods=['GET', 'POST'])
+def s3_2():
+    form = ActionForm()
+    station = 'Millstone Square '
+    choices = get_action_choices(station)
+    # Set the choices for the action field
+    session['s3_2_visited'] = True # Set the flag when s3 is visited
+    form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    
+
+    if form.validate_on_submit():
+        session['station_track'].append([station,current_time])  # Append station to the list 
+        action = form.action.data
+        if action == 'b':
             return process_action(2, 's2')
         elif action == 'c':
             return process_action(3, 's7')
@@ -220,6 +247,7 @@ def s3():
             return process_action(3, 's6')
 
     return render_template('map.html', form=form , current_time=session['current_time'], zip=zip, station=station, choices = choices)
+
 
 # s7
 @app.route('/s7', methods=['GET', 'POST'])

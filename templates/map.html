@@ -8,6 +8,7 @@
 
     // Global variable to track if the second modal has been shown
     var secondModalShown = false;
+    var modalTimer; // Variable to store the timer
 
     // Function to show the modal with a message
     function showModal(message, allowClose = true) {
@@ -40,8 +41,55 @@
         // Logic to show another modal based on conditions
         if (currentStation === 'Millstone Square' && !secondModalShown) {
             secondModalShown = true; // Ensure this modal is shown only once
-            showModal('But a local guide comes to help, he askes about your destination and gives you a detailed guide.');
+                    // Set a timer to show the second modal after 15 seconds
+            modalTimer = setTimeout(function() {
+                showSecondModal();
+            }, 15000);
         }
+    }
+
+    // Function to show the second modal
+    function showSecondModal() {
+        showModal('While you are wondering, a local guide comes to help, he asks about your destination and gives you a detailed guide.');
+
+        // Add an event listener to detect when the modal is closed
+        var closeButton = document.getElementsByClassName("close")[0];
+        if (closeButton) {
+            closeButton.onclick = function() {
+                closeSecondModalAndRedirect();
+            };
+        }
+
+        // Also handle the case when the user clicks outside the modal to close it
+        var myModal = document.getElementById('myModal');
+        window.onclick = function(event) {
+            if (event.target == myModal) {
+                closeSecondModalAndRedirect();
+            }
+        };
+    }
+
+    // Function to handle the submit action
+    // only for the submit at s3 to show the second modal
+    function handleSubmit() {
+        
+        // Clear the timer if the user submits before 15 seconds
+        clearTimeout(modalTimer);
+        // Show the second modal immediately
+        if (currentStation === 'Millstone Square') {
+            event.preventDefault();
+            showSecondModal();
+        }
+    }
+
+    // Function to close the second modal and redirect to s3_2
+    function closeSecondModalAndRedirect() {
+        var myModal = document.getElementById('myModal');
+        if (myModal) {
+            myModal.style.display = "none";
+        }
+        // Redirect to the "s3_2" page
+        window.location.href = "/s3_2";
     }
 
     // Initialize the countdown timer to 90 seconds
@@ -126,9 +174,8 @@ Goal station:   CONBY VALE
 
 <br><br>
 
+
 {% block left_block %}
-
-
 
 {% if session.get('s3_visited') %}
 <br>
@@ -136,9 +183,11 @@ Goal station:   CONBY VALE
     Warning:<br>
     Due to ongoing construction at Bagton Mere, the station is not accessible and no metros will pass through it.  <br>
     Your task remains the same.
-    <!-- Please design your trip accordingly.<br> -->
 </p>
 <br>
+{% endif %}
+
+{% if session.get('s3_2_visited') %}
 
 <p class="t_map">    
     Guide:
@@ -148,37 +197,32 @@ Goal station:   CONBY VALE
     3. When you arrive at Wofford Cross, change to Blue Line to the direction of Windrush Park.<br>
     4. Then you will arrive at Conby Vale. 
     <br><br>
-    <!-- Time costs:<br><br>
-    It takes 2 mins between each Blue Line station. <br>
-    It takes 3 mins between each Red Line station. <br>
-    It takes either 4 or 7 mins between each Yellow Line station (marked on the map). <br><br> -->
-
-
-
+    Route:<br><br>
+    Millstone Square -> Chigwell -> Grunham holt -> Tallow Hill -> Mudchute -> Epping -> Wofford Cross -> <b>Conby Vale</b>
 
 </p>
+
 {% else %}
+
 <p class="t_map">    
     <!-- Intro: -->
     <br><br>
-    You are going to your office at Condy Vale, where you will have an important meeting at 9:00. 
+    You are leaving from Giles Town to your office at Condy Vale, where you will have an important meeting at 9:00. 
     However, while on the metro, your phone died, leaving you no access to the digital map that you are used to.
     You remember that Condy Vale is on the Blue Line, 
     and if you take the metro to the direction of Perivale, you should arrive there in several stops without any transfer. 
     <br><br>
-
-    <!-- Time costs:<br><br>
-    It takes 2 mins between each Blue Line station. <br>
-    It takes 3 mins between each Red Line station. <br>
-    It takes either 4 or 7 mins between each Yellow Line station. <br>
-    They are shown in your options as "Time costs". -->
+    Blue Line: <b>Giles Town</b> -> Lifting Parkway -> Millstone Square -> Bagton Mere -> <b>Condy Vale</b> -> Wofford Cross  -> Perivale
+    <br><br>
 </p>
+
 {% endif %}
+
 {% endblock %}
 
 {% block right_block %}
 
-<form method="POST">
+<form method="POST" onsubmit="handleSubmit()">
     {{ form.hidden_tag() }}
     <br>
     <p class="t_map">Please select your action and continue:</p>
