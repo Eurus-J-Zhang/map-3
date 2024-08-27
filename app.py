@@ -60,7 +60,8 @@ station_config = {
     'Wofford Cross': {'enabled': { 'b': '2'}, 'disabled': ['a','c','d','e','f'], 'guided': ['b']},
     'Conby Vale': {'enabled': {'g': ''}, 'disabled': ['a', 'b', 'c', 'd', 'e', 'f']},
     'Conby Down': {'enabled': {'e': '7', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
-    'Windrush Park': {'enabled': {'a': '2'}, 'disabled': ['b', 'c', 'd', 'e', 'f']}
+    'Windrush Park': {'enabled': {'a': '2'}, 'disabled': ['b', 'c', 'd', 'e', 'f']},
+    'Perivale': {'enabled': {'b': '2'}, 'disabled': ['a', 'c', 'd', 'e', 'f']}
 }
 
 def get_action_choices(station):
@@ -442,6 +443,23 @@ def s12():
         
     return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
+# s14
+@app.route('/s14', methods=['GET', 'POST'])
+def s14():
+    form = ActionForm()
+    station = 'Perivale'
+    choices = get_action_choices(station)
+    form.action.choices = [(value, label) for value, label, is_disabled in choices]
+
+    current_time = session['current_time']
+    session['station_track'].append([station,current_time])  # Append station to the list 
+
+    if form.validate_on_submit():
+        action = form.action.data
+        if action == 'b':
+            return process_action(2, 's5')
+
+    return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
 
 # s17

@@ -7,6 +7,11 @@
     function fn1(){
         window.location="s1";
     }
+
+    // Function for not being able to go backwards
+    function preventBack() { window.history.forward(); }    
+    setTimeout("preventBack()", 0);  
+    window.onunload = function () { null }; 
 </script>
 {% endblock %}
 
