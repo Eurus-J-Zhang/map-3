@@ -191,7 +191,7 @@ def s1():
         elif action == 'b':
             return process_action(2, 's18')
         elif action == 'e':
-            return process_action(4, 's19')
+            return process_action(7, 's19')
 
     return render_template('map.html', form=form ,current_time=session['current_time'], 
                            zip=zip, station=station, choices=choices)
@@ -571,7 +571,7 @@ def s19():
         if action == 'e':
             return process_action(7, 's8')
         elif action == 'f':
-            return process_action(4, 's1')
+            return process_action(7, 's1')
         
     return render_template('map.html', form=form, current_time=session['current_time'], zip=zip, station=station, choices = choices)
 
