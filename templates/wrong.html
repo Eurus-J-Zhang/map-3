@@ -4,22 +4,29 @@
 <script>
     
     function fn1(){
-        window.location="emo";
+        window.location="emo_post";
     }
+
     function preventBack() { window.history.forward(); }  
     setTimeout("preventBack()", 0);  
     window.onunload = function () { null }; 
 
 </script>
-{% endblock %}
+ {% endblock %}
 
 
 {% block  top_block%}
 
 <p class="t_title">
     <br><br>
-    I'm sorry, you have chosen the wrong route and have failed the task. <br>
-    Please continue to fill the questionnaire.   
-<br></p><br>
+    You have failed the task. <br>
+    Please continue to fill the questionnaire.   <br><br>
+<!-- <img src="{{ url_for('static', filename='img/alarm.jpg') }}" alt="Example Image"  style="width: 100%;"> -->
+<br></p>
+
+{% endblock %}
+
+
+{% block right_block %}
 <button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
 {% endblock %}

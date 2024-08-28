@@ -4,7 +4,7 @@
 {% block script %}
 <script>    
     function fn1(){
-        window.location="emo";
+        window.location="emo_post";
     }
 
     function preventBack() { window.history.forward(); }  
@@ -18,12 +18,19 @@
 
 <p class="t_title">
     <br><br>
-    Congratulations!
+
 <br><br>
-You have made all the right choices and you would be in time for you meeting. 
+You have made all the right choices.
+
+The task is completed successfully. 
+<br>Now please continue to fill the questionnaire. 
 <br>
-The task is completed successfully. Now please continue to fill the questionnaire. 
-<br><br><br>
+
 </p>
+
+{% endblock %}
+
+
+{% block right_block %}
 <button onclick="fn1()" id="btn1" class = "continue-btn">Continue</button>
 {% endblock %}

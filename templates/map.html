@@ -134,23 +134,16 @@
             closeButton.onclick = function() {
                 closeModal();
             };
-
-            // Close modal when clicking outside of the modal content
-            window.onclick = function(event) {
-                if (event.target == myModal) {
-                    closeModal();
-                }
-            };
         }
 
         // Show the modal if the station is 'Millstone Square'
         if (currentStation === 'Millstone Square') {
-            showModal(`However, the metro stops here unexpectedly. <br>`);
+            showModal(`Unexpectedly, the metro stops here. <br>`);
         }
 
         // Show the modal with no close option if the current time is >= 09:00
         if (currentTimeStr >= "09:00") {
-            showModal('Sorry, it is already 9:00 and you have not reached your destination. You will be directed to the result page in 5 seconds.', false);
+            showModal('It is already 9:00 and you have not reached your destination. You will be directed to the result page in 5 seconds.', false);
             setTimeout(function() {
                 window.location.href = "/wrong"; // Redirect to the wrong.html page
             }, 5000); // 5000 milliseconds = 5 seconds

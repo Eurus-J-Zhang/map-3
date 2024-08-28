@@ -1,6 +1,6 @@
 from flask import Flask,render_template,url_for,request, redirect, send_from_directory, session
 from flask_migrate import Migrate
-from forms import EmotionForm, DemographicInfo, ActionForm
+from forms import EmotionFormPost, EmotionFormPre, DemographicInfo, ActionForm
 import os
 import pymysql
 from models import db, Data
@@ -25,18 +25,18 @@ app = create_app()
 
 # Centralized action definitions
 actions = {
-    'a': 'Take Blue Line to the direction of Perivale',
-    'b': 'Take Blue Line to the direction of Windrush Park',
-    'c': 'Take Red Line to the direction of Cockfosters',
-    'd': 'Take Red Line to the direction of Fayre End',
-    'e': 'Take Yellow Line to the direction of Cockfosters',
-    'f': 'Take Yellow Line to the direction of Giles Town',
+    'a': 'Take Blue Line towards Perivale',
+    'b': 'Take Blue Line towards Windrush Park',
+    'c': 'Take Red Line towards Cockfosters',
+    'd': 'Take Red Line towards Fayre End',
+    'e': 'Take Yellow Line towards Cockfosters',
+    'f': 'Take Yellow Line towards Giles Town',
     'g': "Get out of the metro"
 }
 
 # Station-specific configurations
 station_config = {
-    'Giles Town': {'enabled': {'a': '2', 'b': '2', 'e': '4'}, 'disabled': ['c', 'd', 'f']},
+    'Giles Town': {'enabled': {'a': '2', 'b': '2', 'e': '7'}, 'disabled': ['c', 'd', 'f']},
     'Lefting Parkway': {'enabled': {'a': '2', 'b': '2'}, 'disabled': ['c', 'd', 'e', 'f']},
     'Millstone Square': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f']},
     # 'Millstone Square ': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f'], 'guided': ['d']},
@@ -59,7 +59,7 @@ station_config = {
     # 'Wofford Cross': {'enabled': {'a': '2', 'b': '2', 'e': '7', 'f': '4'}, 'disabled': ['c', 'd'], 'guided': ['b']},
     'Wofford Cross': {'enabled': { 'b': '2'}, 'disabled': ['a','c','d','e','f'], 'guided': ['b']},
     'Conby Vale': {'enabled': {'g': ''}, 'disabled': ['a', 'b', 'c', 'd', 'e', 'f']},
-    'Conby Down': {'enabled': {'e': '7', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd']},
+    'Conby Down': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
     'Windrush Park': {'enabled': {'a': '2'}, 'disabled': ['b', 'c', 'd', 'e', 'f']},
     'Perivale': {'enabled': {'b': '2'}, 'disabled': ['a', 'c', 'd', 'e', 'f']}
 }
@@ -111,29 +111,42 @@ def index():
         data.pop('submit', None)
         session['index_data'] = data
         # session['counter'] = 0
-        return redirect(url_for('intro'))
+        return redirect(url_for('emo_pre'))
     return render_template('index.html',form=form)
 
-@app.route('/emo', methods=['GET', 'POST'])
-def emo():
-    form = EmotionForm()
+@app.route('/emo_pre', methods=['GET', 'POST'])
+def emo_pre():
+    form = EmotionFormPre()
 
     if form.validate_on_submit():
         # Get form data and remove CSRF token
-        emo_data = form.data
-        emo_data.pop('csrf_token', None)
+        emo_pre_data = form.data
+        emo_pre_data.pop('csrf_token', None)
+        session['emo_pre_data'] = emo_pre_data
+        return redirect(url_for('intro'))
+    return render_template('emo_pre.html', form=form)
+
+@app.route('/emo_post', methods=['GET', 'POST'])
+def emo_post():
+    form = EmotionFormPost()
+
+    if form.validate_on_submit():
+        # Get form data and remove CSRF token
+        emo_post_data = form.data
+        emo_post_data.pop('csrf_token', None)
         
         # Store form data in session
-        session['emo_data'] = emo_data
+        session['emo_post_data'] = emo_post_data
         
         # Retrieve necessary session data
+        emo_pre_data = session.get('emo_pre_data',{})
         index_data = session.get('index_data', {})
         station_track = session.get('station_track', [])
         station_track_json = json.dumps(station_track)
         result = session.get('result')
 
         # Combine all data
-        combined_data = {**index_data, 'station_track': station_track_json,'result': result, **emo_data}
+        combined_data = {**index_data, 'station_track': station_track_json,'result': result, **emo_pre_data, **emo_post_data}
         
         # Save combined data to the database
         data = Data(**combined_data)
@@ -143,7 +156,8 @@ def emo():
         # Redirect to the next page
         return redirect('end')
 
-    return render_template('emo.html', form=form)
+    return render_template('emo_post.html', form=form)
+
 
 # intro
 @app.route('/intro')

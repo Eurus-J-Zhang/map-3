@@ -18,14 +18,15 @@
 {% block headline %}
 
 <p class="t_note">
+    Please read through the instructions and then start the task.<br><br>
 
-    Your task is to navigate the metro lines from the starting station at 8:30, and to reach your destination before 9:00.<br>
-    Please plan your route accordingly and avoid unnecessary detours to ensure you arrive in time. 
+    Your goal is to navigate the metro lines using the provided interface, starting at 8:30 and reaching your destination by 9:00.<br>
+    Please plan your route carefully and avoid unnecessary detours to ensure you arrive in time. 
 <br><br>
     At each station, you will have 90 seconds to choose an action, which will lead you to the next station. <br>
-    While the clock time will increase based on your choices, the 90-seconds decision time does not affect the clock. 
+    The clock time will increase based on your choices, but the 90-seconds decision time does not affect the clock. 
     <br><br>
-    To successfully complete the task, you must arrive your destination before 9:00, and make decisions within the allotted 90 seconds at any station. 
+    To successfully complete the task, you must arrive your destination before 9:00, and make decisions within the 90-second limit at any station. 
 
 </p>
 
@@ -61,27 +62,15 @@ Goal Station:   ***
 <br><br>
 <p class="t_note">
     <br>
-    <br>
+
     Here, you will have some guidance for your trip. <br>
     <!-- In this game, the time cost for metro transfers is not considered.  -->
-    <br><br>
+    <br>
 </p>
 <p class="t_map">    
     <br>
     ***
-    <!-- Guide:
-    <br><br>
-    You are meeting your friend at Condy Vale at 9:00. 
-    However, while on the metro, your phone died, leaving you no access to the digital map that you are used to.
-    You remember that Condy Vale is on the Blue Line, 
-    and if you take the metro to the direction of Perivale, you should arrive there without any transfer. 
-    <br><br> -->
 
-    <!-- Time costs:<br><br>
-    It takes 2 mins between each Blue Line station. <br>
-    It takes 3 mins between each Red Line station. <br>
-    It takes either 4 or 7 mins between each Yellow Line station. <br>
-    They are shown in your options as "Time costs". -->
 </p>
 
 
@@ -92,7 +81,7 @@ Goal Station:   ***
 
 {% block right_block %}
 <p class="t_note">
-    Here, you can choose your action, which will take you to the next station, with the clock time adjusting accordingly. <br>
+    Here, choose your action to move to the next station. The clock time will adjust according to the time cost of your action. <br>
     Available choices will be shown in their metro colors, while unavailable options will be greyed out. <br>
     Once selected, your choice will change from white text to black text.
 </p>
@@ -113,7 +102,8 @@ Goal Station:   ***
     </form>
     <br>
 <p class="t_note">
-    If you have understood everything, please click the button "Continue" to access the game. All the notes in the box will disappear there. 
+    If you have understood everything, please click the button "Continue" to access the game. 
+    All the notes in the boxes will disappear, and the task will start immediately. 
 </p>
 
 <br>

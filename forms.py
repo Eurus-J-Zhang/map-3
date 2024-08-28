@@ -13,17 +13,27 @@ class DemographicInfo(FlaskForm):
 eleven_point_scale = [(str(i), f'Opt{i}') for i in range(11)]
 
 # Here is the first emotion check
-class EmotionForm(FlaskForm):
-    emo_competence = RadioField('Competence', choices=eleven_point_scale, validators=[DataRequired()])
-    emo_joy = RadioField('Joy', choices=eleven_point_scale, validators=[DataRequired()])
-    emo_pride = RadioField('Pride', choices=eleven_point_scale, validators=[DataRequired()])
-    emo_boredom = RadioField('Boredom', choices=eleven_point_scale, validators=[DataRequired()])
-    emo_irritation = RadioField('Irritation', choices=eleven_point_scale, validators=[DataRequired()]) 
-    emo_anxiety = RadioField('Anxiety', choices=eleven_point_scale, validators=[DataRequired()])  
-    emo_shame = RadioField('Shame', choices=eleven_point_scale, validators=[DataRequired()])   
+class EmotionFormPre(FlaskForm):
+    emo1_competence = RadioField('Competence', choices=eleven_point_scale, validators=[DataRequired()])
+    emo1_joy = RadioField('Joy', choices=eleven_point_scale, validators=[DataRequired()])
+    emo1_pride = RadioField('Pride', choices=eleven_point_scale, validators=[DataRequired()])
+    emo1_boredom = RadioField('Boredom', choices=eleven_point_scale, validators=[DataRequired()])
+    emo1_irritation = RadioField('Irritation', choices=eleven_point_scale, validators=[DataRequired()]) 
+    emo1_anxiety = RadioField('Anxiety', choices=eleven_point_scale, validators=[DataRequired()])  
+    emo1_shame = RadioField('Shame', choices=eleven_point_scale, validators=[DataRequired()])  
     
-    feedback = StringField('',validators=[DataRequired()],widget=TextArea())
+    feedback1 = StringField('',validators=[DataRequired()],widget=TextArea())
 
+class EmotionFormPost(FlaskForm):
+    emo2_competence = RadioField('Competence', choices=eleven_point_scale, validators=[DataRequired()])
+    emo2_joy = RadioField('Joy', choices=eleven_point_scale, validators=[DataRequired()])
+    emo2_pride = RadioField('Pride', choices=eleven_point_scale, validators=[DataRequired()])
+    emo2_boredom = RadioField('Boredom', choices=eleven_point_scale, validators=[DataRequired()])
+    emo2_irritation = RadioField('Irritation', choices=eleven_point_scale, validators=[DataRequired()]) 
+    emo2_anxiety = RadioField('Anxiety', choices=eleven_point_scale, validators=[DataRequired()])  
+    emo2_shame = RadioField('Shame', choices=eleven_point_scale, validators=[DataRequired()])  
+    
+    feedback2 = StringField('',validators=[DataRequired()],widget=TextArea())
 
 class ActionForm(FlaskForm):
     action = RadioField('Choose an action', validators=[DataRequired(message="You must choose an action.")])
