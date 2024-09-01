@@ -3,16 +3,18 @@
 {% block top_block %}
 
 <p class="t_title">
-
-  <br>Please take a moment to reflect on your emotional experience, and rate them accordingly:
+  <br>
+  <!-- <br>Please take a moment to reflect on your emotional experience, and rate them accordingly: -->
+  Given your performance in the task, how do you rate that your emotions <b>have changed</b> from the beginning of the task?<br>
+  (Please rate every emotion here)
   <br><br>
 
 <!-- </p>
 
 <p class = 't_note'> -->
-    0 = not experiencing this emotion at all, 
-    5= experiencing this emotion moderately, 
-    10 = experiencing this emotion intensely
+  -5 = a significant <b>decrease</b> in this emotion, 
+  0 = no change in this emotion, 
+  5 = a significant <b>increase</b> in this emotion
 </p>
 
 <div class="form-container">
@@ -22,17 +24,17 @@
   <table>
     <tr>
       <th></th>
+      <th>-5</th>
+      <th>-4</th>
+      <th>-3</th>
+      <th>-2</th>
+      <th>-1</th>
       <th>0</th>
       <th>1</th>
       <th>2</th>
       <th>3</th>
       <th>4</th>
       <th>5</th>
-      <th>6</th>
-      <th>7</th>
-      <th>8</th>
-      <th>9</th>
-      <th>10</th>
     </tr>
     <tr>
       <td>{{ form.emo2_competence.label }}</td>
