@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block top_block %}
+
+
+<div class="form-container">
+    <form method="POST">
+      {{ form.hidden_tag() }}
+
+    <br>
+    
+    <p class="t_title">
+        Please share your experiences during the task. <br>
+        <!-- How were you successful in completing the task? <br> -->
+        <!-- What solution did you use when encountering the metro disruption and had to adjust your approach? -->
+        <!-- <br><br> -->
+    </p>
+      
+
+    <br>
+    
+    <p class="t_title">
+        <!-- If you have to choose one, which do you believe contributes more to the success of the task? -->
+        Do you think you have used your own problem-solving skill to influence the success of the task? <br>
+        If yes, please explain how you solved the problem. <br>
+        If no, then explain what made you succeed the task?
+    </p>
+    <br>
+<div>
+    {{ form.reflection.label }}
+    {{ form.reflection(class="feedback-input") }}
+</div>
+
+<br>
+      <input type="submit" value="Continue" class = "continue-btn">
+    </form>
+    </div>
+    
+    <br><br><br>
+
+    {% endblock %}

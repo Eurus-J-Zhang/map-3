@@ -1,11 +1,8 @@
 
-
 .t_note{
     font-size: 18px;
     font-family: "Georgia", sans-serif;
     color:olive;
-    margin-left: 10%;
-    margin-right: 10%;
     border: 2px dashed olive; 
     padding: 5px; 
     padding-left: 5%;
@@ -13,24 +10,20 @@
     border-radius: 3px;
 }
 
-.t_map{
-    margin-left: 5%;
-    margin-right: 5%;
-}
 
 .t_content{
     font-size: 20px;
     text-align: left;
-    margin-left: 15%;
-    margin-right: 15%;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .t_warning{
     font-size: 18px;
     font-family: "Georgia", sans-serif;
     color:red;
-    margin-left: 5%;
-    margin-right: 5%;
+    /* margin-left: 5%; */
+    /* margin-right: 5%; */
     border: 2px dashed red; 
     padding: 5px; 
     padding-left: 5%;
@@ -59,7 +52,7 @@ form p {
 
 .my-table {
     /* padding-right: 20px; */
-    width: 40%;
+    width: 500px;
 
 }
 
@@ -91,11 +84,6 @@ form p {
     font-family: Arial;
 }
 
-.container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 
 /* The Modal (background) */
 .modal {
@@ -154,8 +142,8 @@ form p {
     gap: 20px; /* Adjust the gap as needed */
     margin-top: auto; 
     margin-bottom: auto;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
     font-size: 20px;
 }
 
@@ -184,10 +172,7 @@ form p {
 
 .left-block, .right-block {
     padding: 10px; /* Add some padding to the blocks */
-    /* border: 1px solid #ccc;  */
-    /* Optional: Add a border */
 }
-
 
 
 .headline {
@@ -197,11 +182,8 @@ form p {
 
 /* for the radio buttons */
 .radio {
-    margin-top: 10px;
-    /* margin-bottom: 10px; */
     margin-left: 5%;
-    /* margin-right: 5%; */
-
+    margin-right: 5%;
 }
 
 .radio label {
@@ -211,10 +193,6 @@ form p {
     cursor: pointer;
     line-height: 1.2;
 }
-
-/* .radio input[type="radio"] {
-    margin-right: 10px;
-} */
 
 /* Grayed out disabled radio buttons */
 .radio input[type="radio"]:disabled + label {
@@ -239,7 +217,7 @@ form p {
     border: 2px solid;
     border-radius: 5px;
     cursor: pointer;
-    width: 80%;
+    width: 100%;
 }
 
 /* Color-specific styles */
@@ -270,12 +248,7 @@ input:not([disabled]) + .g{
     color: white;
 }
 
-.form-container {
-    width: 80%; /* Adjust the width as necessary */
-    margin: 0 auto;
-    text-align: center;
-    line-height: 200%;
-}
+
 
 .form-action{
     height: 200%;
@@ -285,5 +258,7 @@ table {
     width: 60%;
     margin: 0 auto;
     text-align: center;
+    line-height: 200%;
+    max-width: 700px;
 }
 

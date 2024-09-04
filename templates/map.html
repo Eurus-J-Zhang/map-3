@@ -98,30 +98,6 @@
         window.location.href = "/s3_2";
     }
 
-    // Initialize the countdown timer to 90 seconds
-    // let countdown = 90;
-
-    // Function to start the countdown timer
-    // function startCountdown() {
-    //     const timerElement = document.getElementById('timer');
-
-    //     const countdownInterval = setInterval(function() {
-    //         // Update the timer display
-    //         timerElement.textContent = countdown;
-
-    //         // Decrease the countdown by one second
-    //         countdown--;
-
-    //         // If the countdown reaches zero, redirect to the fail page
-    //         if (countdown < 0) {
-    //             clearInterval(countdownInterval);
-    //             showModal(`You have run out of time to make an action. You will be directed to the result page in 5 seconds`, false);
-    //             setTimeout(function() {
-    //                 window.location.href = "/wrong"; // Redirect to the wrong.html page
-    //             }, 5000);
-    //         }
-    //     }, 1000); // Update every second
-    // }
 
     // Set up close functionality
     document.addEventListener('DOMContentLoaded', function() {
@@ -164,10 +140,8 @@ Goal station:   CONBY VALE
     Current station: <span style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">{{ station | upper }}</span>
     <br><br>
     Clock Time: <span style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">{{current_time}}</span>
-    <br><br>
-    <!-- Time left to make an action: 
-    <span id="timer" style="border: 1px solid #000; padding: 5px; border-radius: 3px;padding-left: 3%;padding-right: 3%;">90</span> seconds -->
-</div>
+    <br>
+    </div>
 {% endblock %}
 
 
@@ -183,12 +157,13 @@ Goal station:   CONBY VALE
     Due to ongoing construction at Bagton Mere, the station is not accessible and no metros will pass through it.  <br>
     Your task remains the same.
 </p>
-<br>
+
 {% endif %}
 
 {% if session.get('s3_2_visited') %}
 
 <p class="t_map">    
+    <br>
     Guide:
     <br><br>
     1. Take Red Line to the direction of Fayre End.<br>
@@ -210,8 +185,8 @@ Goal station:   CONBY VALE
     However, while on the metro, your phone died, leaving you no access to the digital map that you are used to.
     You remember that Condy Vale is on the Blue Line, 
     and if you take the metro to the direction of Perivale, you should arrive there in several stops without any transfer. 
-    <br><br>
-    Blue Line:<br> 
+    <br><br><br>
+    Blue Line:<br> <br>
     Windrush Park -> <b>Giles Town</b> -> Lifting Parkway -> Millstone Square -> Bagton Mere -> <b>Condy Vale</b> -> Wofford Cross  -> Perivale
     <br><br>
 </p>
@@ -226,7 +201,7 @@ Goal station:   CONBY VALE
     {{ form.hidden_tag() }}
     <br>
     <p class="t_map">Please select your action and continue:</p>
-    <br>
+
     {% for subfield, choice in zip(form.action, choices) %}
         <div class="radio">
             {{ subfield(disabled=not choice[2], id=subfield.id, class_="colored-radio " + choice[0]) }}

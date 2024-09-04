@@ -91,7 +91,7 @@ Goal Station:   Conby Vale
         {{ form.hidden_tag() }}
         
     <!-- <p class="t_map">Please select your action and continue:</p>        -->
-    <br> 
+
         {% for subfield, choice in zip(form.action, choices) %}
             <div class="radio">
                 {{ subfield(disabled=not choice[2], id=subfield.id, class_="colored-radio " + choice[0]) }}

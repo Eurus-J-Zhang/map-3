@@ -11,6 +11,7 @@ class DemographicInfo(FlaskForm):
     submit = SubmitField('Continue', render_kw={'class': 'continue-btn'})
 
 eleven_point_scale = [(str(i), f'Opt{i}') for i in range(11)]
+
 eleven_point_scale_change = [(str(i), f'Opt{i}') for i in range(-5, 6)]
 
 # Here is the first emotion check
@@ -35,6 +36,11 @@ class EmotionFormPost(FlaskForm):
     emo2_shame = RadioField('Shame', choices=eleven_point_scale_change, validators=[DataRequired()])  
     
     feedback2 = StringField('',validators=[DataRequired()],widget=TextArea())
+
+class ReflectForm(FlaskForm):
+    # strategy_fb = StringField('',validators=[DataRequired()],widget=TextArea())
+    reflection = StringField('',validators=[DataRequired()],widget=TextArea())
+    # contribution = RadioField('Contribution', choices=[('A','Instructions I was given'),('B','My skill')], validators=[DataRequired()])
 
 class ActionForm(FlaskForm):
     action = RadioField('Choose an action', validators=[DataRequired(message="You must choose an action.")])

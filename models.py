@@ -28,3 +28,5 @@ class Data(db.Model):
     feedback2 = db.Column(db.Text)
     station_track = db.Column(db.String(500), nullable=True)
     result = db.Column(db.String(50), nullable=True)
+
+    reflection = db.Column(db.Text)

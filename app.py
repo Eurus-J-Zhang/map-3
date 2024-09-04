@@ -1,6 +1,6 @@
 from flask import Flask,render_template,url_for,request, redirect, send_from_directory, session
 from flask_migrate import Migrate
-from forms import EmotionFormPost, EmotionFormPre, DemographicInfo, ActionForm
+from forms import EmotionFormPost, EmotionFormPre, DemographicInfo, ActionForm, ReflectForm
 import os
 import pymysql
 from models import db, Data
@@ -11,8 +11,8 @@ pymysql.install_as_MySQLdb()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('JAWSDB_URL')
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('JAWSDB_URL')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
     app.config['SECRET_KEY'] = "iloveeurus"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -39,24 +39,17 @@ station_config = {
     'Giles Town': {'enabled': {'a': '2', 'b': '2', 'e': '7'}, 'disabled': ['c', 'd', 'f']},
     'Lefting Parkway': {'enabled': {'a': '2', 'b': '2'}, 'disabled': ['c', 'd', 'e', 'f']},
     'Millstone Square': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f']},
-    # 'Millstone Square ': {'enabled': {'b': '2', 'c': '3', 'd': '3'}, 'disabled': ['a', 'e', 'f'], 'guided': ['d']},
     'Millstone Square ': {'enabled': {'d': '3'}, 'disabled': ['a','b','c', 'e', 'f'], 'guided': ['d']},
     'Donningpool North': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a', 'b', 'e', 'f']},
     'Cockfosters': {'enabled': {'d': '3', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'e']},
     'Oldgate': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
     'Thornbury Fields': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
-    # 'Chigwell': {'enabled': {'c': '3', 'd': '3'}, 'disabled': ['a','b', 'e', 'f'], 'guided': ['d']},
     'Chigwell': {'enabled': {'d': '3'}, 'disabled': ['a','b','c','e', 'f'], 'guided': ['d']},
-    # 'Grunham Holt': {'enabled': {'c': '3', 'd': '3', 'e': '4', 'f': '7'}, 'disabled': ['a', 'b'], 'guided': ['e']},
     'Grunham Holt': {'enabled': { 'e': '4'}, 'disabled': ['a','b','c','d','f'], 'guided': ['e']},
     'Fayre End': {'enabled': {'c': '3'}, 'disabled': ['a', 'b', 'd', 'e', 'f']},
-    # 'Tallow Hill': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd'], 'guided': ['e']},
     'Tallow Hill': {'enabled': { 'e': '4'}, 'disabled': ['a','b','c','d','f'], 'guided': ['e']},
-    # 'Mudchute': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd'], 'guided': ['e']},
     'Mudchute': {'enabled': { 'e': '4'}, 'disabled': ['a','b','c','d','f'], 'guided': ['e']},
-    # 'Epping': {'enabled': {'e': '4', 'f': '4'}, 'disabled': ['a', 'b', 'c', 'd'], 'guided': ['e']},
     'Epping': {'enabled': { 'e': '4'}, 'disabled': ['a','b','c','d','f'], 'guided': ['e']},
-    # 'Wofford Cross': {'enabled': {'a': '2', 'b': '2', 'e': '7', 'f': '4'}, 'disabled': ['c', 'd'], 'guided': ['b']},
     'Wofford Cross': {'enabled': { 'b': '2'}, 'disabled': ['a','c','d','e','f'], 'guided': ['b']},
     'Conby Vale': {'enabled': {'g': ''}, 'disabled': ['a', 'b', 'c', 'd', 'e', 'f']},
     'Conby Down': {'enabled': {'e': '7', 'f': '7'}, 'disabled': ['a', 'b', 'c', 'd']},
@@ -113,6 +106,19 @@ def index():
         # session['counter'] = 0
         return redirect(url_for('emo_pre'))
     return render_template('index.html',form=form)
+
+@app.route('/reflect', methods=['GET', 'POST'])
+def reflect():
+    form = ReflectForm()
+
+    if form.validate_on_submit():
+        # Get form data and remove CSRF token
+        reflect_data = form.data
+        reflect_data.pop('csrf_token', None)
+        reflect_data.pop('submit', None)
+        session['reflect_data'] = reflect_data
+        return redirect(url_for('emo_post'))
+    return render_template('reflect.html', form=form)
 
 @app.route('/emo_pre', methods=['GET', 'POST'])
 def emo_pre():
