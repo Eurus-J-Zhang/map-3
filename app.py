@@ -147,12 +147,14 @@ def emo_post():
         # Retrieve necessary session data
         emo_pre_data = session.get('emo_pre_data',{})
         index_data = session.get('index_data', {})
+        reflect_data = session.get('reflect_data', {})
         station_track = session.get('station_track', [])
         station_track_json = json.dumps(station_track)
         result = session.get('result')
 
         # Combine all data
-        combined_data = {**index_data, 'station_track': station_track_json,'result': result, **emo_pre_data, **emo_post_data}
+        combined_data = {**index_data, 'station_track': station_track_json,'result': result, 
+                         **emo_pre_data, **reflect_data, **emo_post_data}
         
         # Save combined data to the database
         data = Data(**combined_data)
